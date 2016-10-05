@@ -13,8 +13,18 @@ public abstract class BodyMethodDeclarationWriter extends NovaMethodDeclarationW
 		
 		getWriter(node().getParameterList()).write(builder).append(" ");
 		
-		getWriter(node().getScope()).write(builder, true, false);
+		writeBody(builder);
 		
 		return builder.append(";\n\n");
+	}
+	
+	public StringBuilder writeBody()
+	{
+		return writeBody(new StringBuilder());
+	}
+	
+	public StringBuilder writeBody(StringBuilder builder)
+	{
+		return getWriter(node().getScope()).write(builder, true, false);
 	}
 }
