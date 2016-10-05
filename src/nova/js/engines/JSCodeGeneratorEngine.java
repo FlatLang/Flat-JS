@@ -31,20 +31,43 @@ public class JSCodeGeneratorEngine extends CodeGeneratorEngine
 	 */
 	public void generateOutput()
 	{
-		tree.getRoot().forEachVisibleListChild(file -> {
+		if (controller.isFlagEnabled(Nova.SINGLE_FILE))
+		{
+			String extension = FileUtils.getFileExtension(controller.outputFile.getName());
+			
+			if (extension != null && !extension.toLowerCase().equals("js"))
+			{
+				controller.error("Invalid output file extension '" + extension + "'. The extension must be js");
+				
+				return;
+			}
+			
 			try
 			{
-				File outputDir = getOutputDirectory(file);
-				
-				new File(outputDir, file.getPackage().getLocation()).mkdirs();
-				
-				writeFile(file.getPackage().getLocation() + "/" + file.getName() + ".js", outputDir, formatText(getWriter(file).write().toString()));
+				writeFile(FileUtils.removeFileExtension(controller.outputFile.getName()) + ".js", controller.outputFile.getParentFile(), formatText(getWriter(tree.getRoot()).write().toString()));
 			}
 			catch (IOException e)
 			{
 				e.printStackTrace();
 			}
-		});
+		}
+		else
+		{
+			tree.getRoot().forEachVisibleListChild(file -> {
+				try
+				{
+					File outputDir = getOutputDirectory(file);
+					
+					new File(outputDir, file.getPackage().getLocation()).mkdirs();
+					
+					writeFile(file.getPackage().getLocation() + "/" + file.getName() + ".js", outputDir, formatText(getWriter(file).write().toString()));
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+			});
+		}
 	}
 	
 	public void formatOutput()
