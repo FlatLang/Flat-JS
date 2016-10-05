@@ -7,8 +7,14 @@ import net.fathomsoft.nova.tree.ClassDeclaration;
 import net.fathomsoft.nova.tree.FileDeclaration;
 import net.fathomsoft.nova.tree.MethodDeclaration;
 import net.fathomsoft.nova.tree.Program;
+import net.fathomsoft.nova.util.FileUtils;
+import net.fathomsoft.nova.util.SyntaxUtils;
+
+import java.io.File;
+import java.io.IOException;
 
 import static net.fathomsoft.nova.Nova.LIBRARY;
+import static nova.js.nodewriters.Writer.getWriter;
 
 public class JSCodeGeneratorEngine extends CodeGeneratorEngine
 {
@@ -25,7 +31,20 @@ public class JSCodeGeneratorEngine extends CodeGeneratorEngine
 	 */
 	public void generateOutput()
 	{
-		
+		tree.getRoot().forEachVisibleListChild(file -> {
+			try
+			{
+				File outputDir = getOutputDirectory(file);
+				
+				new File(outputDir, file.getPackage().getLocation()).mkdirs();
+				
+				writeFile(file.getPackage().getLocation() + "/" + file.getName() + ".js", outputDir, formatText(getWriter(file).write().toString()));
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		});
 	}
 	
 	public void formatOutput()
@@ -65,34 +84,11 @@ public class JSCodeGeneratorEngine extends CodeGeneratorEngine
 			return;
 		}
 		
-		StringBuilder staticBlockCalls  = generateStaticBlockCalls();
-		
 		FileDeclaration fileDeclaration = mainMethod.getFileDeclaration();
 		
 		if (mainMethod != null)
 		{
 			
 		}
-	}
-	
-	private StringBuilder generateStaticBlockCalls()
-	{
-		StringBuilder builder = new StringBuilder();
-		
-		Program root = tree.getRoot();
-		
-		for (int i = 0; i < root.getNumVisibleChildren(); i++)
-		{
-			FileDeclaration  file  = (FileDeclaration)root.getVisibleChild(i);
-			
-			for (ClassDeclaration clazz : file.getClassDeclarations())
-			{
-				clazz.getStaticBlockList().forEachVisibleChild(block -> {
-					// do something with block
-				});
-			}
-		}
-		
-		return builder;
 	}
 }

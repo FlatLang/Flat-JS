@@ -1,12 +1,12 @@
 package nova.js.nodewriters;
 
 import net.fathomsoft.nova.tree.*;
+import net.fathomsoft.nova.tree.Package;
 import net.fathomsoft.nova.tree.annotations.Annotation;
 import net.fathomsoft.nova.tree.exceptionhandling.*;
 import net.fathomsoft.nova.tree.lambda.LambdaMethodDeclaration;
 import net.fathomsoft.nova.tree.match.*;
 import net.fathomsoft.nova.tree.variables.*;
-import net.fathomsoft.nova.tree.Package;
 
 public class Writer
 {
@@ -20,6 +20,28 @@ public class Writer
 				public Annotation node()
 				{
 					return (Annotation)node;
+				}
+			};
+		}
+		else if (node instanceof MutatorMethod)
+		{
+			return new MutatorMethodWriter()
+			{
+				@Override
+				public MutatorMethod node()
+				{
+					return (MutatorMethod)node;
+				}
+			};
+		}
+		else if (node instanceof AccessorMethod)
+		{
+			return new AccessorMethodWriter()
+			{
+				@Override
+				public AccessorMethod node()
+				{
+					return (AccessorMethod)node;
 				}
 			};
 		}
@@ -295,17 +317,6 @@ public class Writer
 				public FieldDeclaration node()
 				{
 					return (FieldDeclaration)node;
-				}
-			};
-		}
-		else if (node instanceof FieldList)
-		{
-			return new FieldListWriter()
-			{
-				@Override
-				public FieldList node()
-				{
-					return (FieldList)node;
 				}
 			};
 		}
@@ -672,6 +683,17 @@ public class Writer
 				}
 			};
 		}
+		else if (node instanceof FieldList)
+		{
+			return new FieldListWriter()
+			{
+				@Override
+				public FieldList node()
+				{
+					return (FieldList)node;
+				}
+			};
+		}
 		else if (node instanceof TernaryOperation)
 		{
 			return new TernaryOperationWriter()
@@ -898,8 +920,8 @@ public class Writer
 			{
 				@Override
 				public AbstractMethodDeclaration node()
-			{
-				return (AbstractMethodDeclaration)(AbstractMethodDeclaration)node;
+				{
+					return (AbstractMethodDeclaration)(AbstractMethodDeclaration)node;
 				}
 			};
 		}
@@ -989,6 +1011,16 @@ public class Writer
 				return (Node)node;
 			}
 		};
+	}
+	
+	public static MutatorMethodWriter getWriter(final MutatorMethod node)
+	{
+		return (MutatorMethodWriter)getWriter((Node)node);
+	}
+	
+	public static AccessorMethodWriter getWriter(final AccessorMethod node)
+	{
+		return (AccessorMethodWriter)getWriter((Node)node);
 	}
 	
 	public static AccessibleWriter getWriter(final Accessible node)

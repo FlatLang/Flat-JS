@@ -6,5 +6,11 @@ public abstract class LiteralWriter extends IValueWriter implements AccessibleWr
 {
 	public abstract Literal node();
 	
-	
+	@Override
+	public StringBuilder writeExpression(final StringBuilder builder)
+	{
+		builder.append(node().value);
+		
+		return builder;
+	}
 }

@@ -6,5 +6,9 @@ public abstract class ExternalMethodDeclarationWriter extends MethodDeclarationW
 {
 	public abstract ExternalMethodDeclaration node();
 	
-	
+	@Override
+	public StringBuilder write(StringBuilder builder)
+	{
+		return builder;
+	}
 }

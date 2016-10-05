@@ -6,5 +6,17 @@ public abstract class IdentifierWriter extends ValueWriter implements Accessible
 {
 	public abstract Identifier node();
 	
+	@Override
+	public StringBuilder writeExpression(StringBuilder builder)
+	{
+		writeUseExpression(builder);
+		writeAccessedExpression(builder);
+		
+		return builder;
+	}
 	
+	public StringBuilder writeUseExpression(StringBuilder builder)
+	{
+		return builder.append(node().getName());
+	}
 }

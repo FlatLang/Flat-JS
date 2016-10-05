@@ -6,5 +6,13 @@ public abstract class ProgramWriter extends NodeWriter
 {
 	public abstract Program node();
 	
-	
+	@Override
+	public StringBuilder write(final StringBuilder builder)
+	{
+		node().forEachChild(child -> {
+			getWriter(child).write(builder);
+		});
+		
+		return builder;
+	}
 }
