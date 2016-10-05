@@ -9,7 +9,7 @@ public abstract class BodyMethodDeclarationWriter extends NovaMethodDeclarationW
 	@Override
 	public StringBuilder write(StringBuilder builder)
 	{
-		builder.append("this.").append(writeName()).append(" = function ");
+		writeAssignedVariable(builder).append(" = function ");
 		
 		getWriter(node().getParameterList()).write(builder).append(" ");
 		
