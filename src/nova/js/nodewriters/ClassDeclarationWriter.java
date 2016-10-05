@@ -13,8 +13,6 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 	{
 		builder.append("var ").append(node().getName()).append(" = function () {\n");
 		
-		builder.append("var self = this;\n\n");
-		
 		getWriter(node().getFieldList().getPrivateFieldList()).write(builder);
 		getWriter(node().getFieldList().getPublicFieldList()).write(builder);
 		
@@ -24,14 +22,14 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 			builder.append('\n').append(getWriter(child).write());
 		});
 		
+		builder.append("\n};\n\n");
+		
 		getWriter(node().getConstructorList()).write(builder);
 		getWriter(node().getDestructorList()).write(builder);
 		getWriter(node().getMethodList()).write(builder);
 		getWriter(node().getPropertyMethodList()).write(builder);
 		getWriter(node().getHiddenMethodList()).write(builder);
 		getWriter(node().getVirtualMethodList()).write(builder);
-		
-		builder.append("\n};\n");
 		
 		generateStaticBlocksSource(builder);
 		
