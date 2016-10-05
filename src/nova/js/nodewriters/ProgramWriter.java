@@ -9,6 +9,8 @@ public abstract class ProgramWriter extends NodeWriter
 	@Override
 	public StringBuilder write(final StringBuilder builder)
 	{
+		builder.append("var novaConstructors = {};\n\n");
+		
 		node().forEachChild(child -> {
 			getWriter(child).write(builder);
 		});
