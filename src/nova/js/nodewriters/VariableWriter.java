@@ -18,7 +18,7 @@ public abstract class VariableWriter extends IdentifierWriter
 			
 			if (declaration instanceof Constructor == false && !declaration.isLocal())
 			{
-				builder.append("self");
+				builder.append("this");
 				
 				if (node().getDeclaration() instanceof ReferenceParameter)
 				{
