@@ -33,6 +33,13 @@ public class JSCodeGeneratorEngine extends CodeGeneratorEngine
 	{
 		if (controller.isFlagEnabled(Nova.SINGLE_FILE))
 		{
+			if (controller.outputFile == null)
+			{
+				controller.error("You must specify the output file name either using the -o argument, or as the last argument.");
+				
+				return;
+			}
+			
 			String extension = FileUtils.getFileExtension(controller.outputFile.getName());
 			
 			if (extension != null && !extension.toLowerCase().equals("js"))
@@ -53,6 +60,11 @@ public class JSCodeGeneratorEngine extends CodeGeneratorEngine
 		}
 		else
 		{
+			if (((JSCompileEngine)controller.compileEngine).localScope)
+			{
+				controller.warning("Ignoring -local-scope argument because not compiling using -single-file argument.");
+			}
+			
 			tree.getRoot().forEachVisibleListChild(file -> {
 				try
 				{
