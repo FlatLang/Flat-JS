@@ -37,6 +37,8 @@ public abstract class NovaMethodDeclarationWriter extends MethodDeclarationWrite
 	
 	public StringBuilder writeAssignedVariable(StringBuilder builder)
 	{
-		return builder.append(node().getParentClass().getName()).append(".prototype.").append(writeName());
+		String prototype = node().isStatic() ? "" : ".prototype";
+		
+		return builder.append(node().getParentClass().getName()).append(prototype).append(".").append(writeName());
 	}
 }
