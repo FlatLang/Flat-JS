@@ -13,6 +13,30 @@ public abstract class NovaMethodDeclarationWriter extends MethodDeclarationWrite
 	
 	public StringBuilder writeName(StringBuilder builder)
 	{
-		return builder.append(node().getName());
+		String name = node().getName();
+		
+		if (node().getOverloadID() >= 0)
+		{
+			name += node().getOverloadID();
+			
+			while (node().getParentClass().containsMethod(name))
+			{
+				name += '_';
+			}
+		}
+		
+		builder.append(name);
+		
+		return builder;
+	}
+	
+	public StringBuilder writeAssignedVariable()
+	{
+		return writeName(new StringBuilder());
+	}
+	
+	public StringBuilder writeAssignedVariable(StringBuilder builder)
+	{
+		return builder.append(node().getParentClass().getName()).append(".prototype.").append(writeName());
 	}
 }
