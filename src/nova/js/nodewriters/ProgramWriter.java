@@ -3,7 +3,7 @@ package nova.js.nodewriters;
 import net.fathomsoft.nova.tree.*;
 import nova.js.engines.JSCompileEngine;
 
-public abstract class ProgramWriter extends NodeWriter
+public abstract class ProgramWriter extends TypeListWriter
 {
 	public abstract Program node();
 	
