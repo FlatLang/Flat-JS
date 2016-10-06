@@ -7,9 +7,15 @@ public abstract class IfStatementWriter extends ControlStatementWriter
 	public abstract IfStatement node();
 	
 	@Override
+	public StringBuilder writeExpression(StringBuilder builder)
+	{
+		return builder.append("if (").append(getWriter(node().getCondition()).writeExpression()).append(')');
+	}
+	
+	@Override
 	public StringBuilder write(StringBuilder builder)
 	{
-		builder.append("if (").append(getWriter(node().getCondition()).writeExpression()).append(") ");
+		writeExpression(builder).append(' ');
 		
 		getWriter(node().getScope()).write(builder, true, false);
 		
