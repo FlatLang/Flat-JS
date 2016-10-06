@@ -23,6 +23,17 @@ public class Writer
 				}
 			};
 		}
+		else if (node instanceof ExceptionDeclaration)
+		{
+			return new ExceptionDeclarationWriter()
+			{
+				@Override
+				public ExceptionDeclaration node()
+				{
+					return (ExceptionDeclaration)node;
+				}
+			};
+		}
 		else if (node instanceof MutatorMethod)
 		{
 			return new MutatorMethodWriter()
