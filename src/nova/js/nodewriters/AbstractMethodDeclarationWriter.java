@@ -6,5 +6,9 @@ public abstract class AbstractMethodDeclarationWriter extends NovaMethodDeclarat
 {
 	public abstract AbstractMethodDeclaration node();
 	
-	
+	@Override
+	public StringBuilder write(StringBuilder builder)
+	{
+		return builder;
+	}
 }
