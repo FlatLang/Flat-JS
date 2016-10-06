@@ -9,6 +9,18 @@ public abstract class ElseStatementWriter extends ControlStatementWriter
 	@Override
 	public StringBuilder write(StringBuilder builder)
 	{
-		return builder.append("else ").append(getWriter(node().getScope()).write());
+		builder.append("else ");
+		
+		if (node().getNumChildren() == 2)
+		{
+			Node child = node().getChild(1);
+			
+			if (child instanceof IfStatement)
+			{
+				getWriter(child).writeExpression(builder).append(' ');
+			}
+		}
+		
+		return getWriter(node().getScope()).write(builder);
 	}
 }
