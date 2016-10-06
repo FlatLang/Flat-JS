@@ -10,6 +10,7 @@ public abstract class IdentifierWriter extends ValueWriter implements Accessible
 	public StringBuilder writeExpression(StringBuilder builder)
 	{
 		writeUseExpression(builder);
+		writeArrayAccess(builder);
 		writeAccessedExpression(builder);
 		
 		return builder;
