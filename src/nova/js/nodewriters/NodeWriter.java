@@ -23,6 +23,6 @@ public abstract class NodeWriter extends Writer
 	
 	public StringBuilder writeExpression(final StringBuilder builder)
 	{
-		return builder;
+		return builder.append("{{").append(node().getClass().getSimpleName()).append("}}");
 	}
 }
