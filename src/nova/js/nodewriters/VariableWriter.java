@@ -1,8 +1,6 @@
 package nova.js.nodewriters;
 
 import net.fathomsoft.nova.tree.Constructor;
-import net.fathomsoft.nova.tree.InstanceDeclaration;
-import net.fathomsoft.nova.tree.LocalDeclaration;
 import net.fathomsoft.nova.tree.ReferenceParameter;
 import net.fathomsoft.nova.tree.variables.Variable;
 import net.fathomsoft.nova.tree.variables.VariableDeclaration;
@@ -24,14 +22,12 @@ public abstract class VariableWriter extends IdentifierWriter
 			}
 			else if (declaration instanceof Constructor == false && !declaration.isLocal())
 			{
-				builder.append("this");
-				
 				if (node().getDeclaration() instanceof ReferenceParameter)
 				{
-					return builder;
+					return super.writeExpression(builder);
 				}
 				
-				builder.append('.');
+				builder.append("this.");
 			}
 		}
 		
