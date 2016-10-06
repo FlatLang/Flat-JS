@@ -17,6 +17,16 @@ public abstract class ScopeWriter extends NodeWriter
 		return write(builder, braces, true);
 	}
 	
+	public StringBuilder write(boolean braces)
+	{
+		return write(new StringBuilder(), braces);
+	}
+	
+	public StringBuilder write(boolean braces, boolean newLine)
+	{
+		return write(new StringBuilder(), braces, newLine);
+	}
+	
 	public StringBuilder write(StringBuilder builder, boolean braces, boolean newLine)
 	{
 		if (node().getNumChildren() <= 1)
