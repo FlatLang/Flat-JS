@@ -13,11 +13,26 @@ public interface AccessibleWriter
 		return writeAccessedExpression(new StringBuilder());
 	}
 	
+	default StringBuilder writeAccessedExpression(boolean dot)
+	{
+		return writeAccessedExpression(new StringBuilder(), dot);
+	}
+	
 	default StringBuilder writeAccessedExpression(StringBuilder builder)
+	{
+		return writeAccessedExpression(builder, true);
+	}
+	
+	default StringBuilder writeAccessedExpression(StringBuilder builder, boolean dot)
 	{
 		if (node().doesAccess())
 		{
-			builder.append('.').append(getWriter(node().getAccessedNode()).writeExpression());
+			if (dot)
+			{
+				builder.append('.');
+			}
+			
+			builder.append(getWriter(node().getAccessedNode()).writeExpression());
 		}
 		
 		return builder;
