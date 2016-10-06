@@ -17,7 +17,7 @@ public abstract class MatchWriter extends ControlStatementWriter
 		{
 			Value control = node().getControlValue();
 			
-			builder.append("switch (" + getWriter(control).writeExpression() + ")\n");
+			builder.append("switch (" + getWriter(control).writeExpression() + ") ");
 			
 			getWriter(scope).write(builder);
 		}
@@ -27,14 +27,14 @@ public abstract class MatchWriter extends ControlStatementWriter
 			
 			if (requiresFacade)
 			{
-				builder.append("do\n{\n");
+				builder.append("do {\n");
 			}
 			
 			getWriter(scope).write(builder, false);
 			
 			if (requiresFacade)
 			{
-				builder.append("}\nwhile (0);\n");
+				builder.append("} while (false);\n");
 			}
 		}
 		

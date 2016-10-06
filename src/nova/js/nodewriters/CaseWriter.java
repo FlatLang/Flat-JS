@@ -3,6 +3,7 @@ package nova.js.nodewriters;
 import net.fathomsoft.nova.tree.Scope;
 import net.fathomsoft.nova.tree.Value;
 import net.fathomsoft.nova.tree.match.Case;
+import net.fathomsoft.nova.tree.match.MatchChild;
 import net.fathomsoft.nova.tree.variables.Variable;
 
 public abstract class CaseWriter extends MatchCaseWriter
@@ -57,8 +58,7 @@ public abstract class CaseWriter extends MatchCaseWriter
 			
 			Value value = node().getValue();
 			
-			builder.append("if (" + fall + control + " == " + getWriter(value).writeExpression() + ")").append('\n');
-			builder.append("{\n");
+			builder.append("if (" + fall + control + " == " + getWriter(value).writeExpression() + ") {\n");
 			
 			getWriter(scope).write(builder, false);
 			
@@ -67,7 +67,16 @@ public abstract class CaseWriter extends MatchCaseWriter
 				builder.append("break;\n");
 			}
 			
-			builder.append("}\n");
+			builder.append("}");
+			
+			if (node().getNextNode() instanceof MatchChild)
+			{
+				builder.append(' ');
+			}
+			else
+			{
+				builder.append('\n');
+			}
 		}
 		
 		return builder;
