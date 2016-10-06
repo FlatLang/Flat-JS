@@ -24,6 +24,14 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 		
 		builder.append("\n};\n\n");
 		
+		if (node().doesExtendClass())
+		{
+			builder.append(node().getName()).append(".prototype = Object.create(").append(node().getExtendedClassDeclaration().getName()).append(".prototype);\n");
+			builder.append(node().getName()).append(".prototype.constructor = ").append(node().getName()).append(";\n\n");
+			
+			// TODO: save overridden functions here....
+		}
+		
 		getWriter(node().getConstructorList()).write(builder);
 		getWriter(node().getDestructorList()).write(builder);
 		getWriter(node().getMethodList()).write(builder);
