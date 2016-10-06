@@ -23,6 +23,17 @@ public class Writer
 				}
 			};
 		}
+		else if (node instanceof Super)
+		{
+			return new SuperWriter()
+			{
+				@Override
+				public Super node()
+				{
+					return (Super)node;
+				}
+			};
+		}
 		else if (node instanceof ExceptionDeclaration)
 		{
 			return new ExceptionDeclarationWriter()
