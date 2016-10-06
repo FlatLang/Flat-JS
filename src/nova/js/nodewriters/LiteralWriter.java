@@ -11,6 +11,6 @@ public abstract class LiteralWriter extends IValueWriter implements AccessibleWr
 	{
 		builder.append(node().value);
 		
-		return builder;
+		return writeAccessedExpression(builder);
 	}
 }
