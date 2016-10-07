@@ -11,9 +11,9 @@ public abstract class MethodCallWriter extends VariableWriter
 	{
 		CallableMethod callable = node().getCallableDeclaration();
 		
-		if (callable instanceof NovaMethodDeclaration)
+		if (callable instanceof MethodDeclaration)
 		{
-			getWriter((NovaMethodDeclaration)callable).writeName(builder);
+			getWriter((MethodDeclaration)callable).writeName(builder);
 		}
 		else
 		{

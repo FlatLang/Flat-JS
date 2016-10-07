@@ -6,11 +6,6 @@ public abstract class NovaMethodDeclarationWriter extends MethodDeclarationWrite
 {
 	public abstract NovaMethodDeclaration node();
 	
-	public StringBuilder writeName()
-	{
-		return writeName(new StringBuilder());
-	}
-	
 	public StringBuilder writeName(StringBuilder builder)
 	{
 		String name = node().getName();
