@@ -11,4 +11,10 @@ public abstract class ExternalMethodDeclarationWriter extends MethodDeclarationW
 	{
 		return builder;
 	}
+
+	@Override
+	public StringBuilder writeName(StringBuilder builder)
+	{
+		return builder.append(node().alias);
+	}
 }
