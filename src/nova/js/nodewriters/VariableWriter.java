@@ -16,18 +16,21 @@ public abstract class VariableWriter extends IdentifierWriter
 		{
 			VariableDeclaration declaration = node().getDeclaration();
 			
-			if (!declaration.isInstance())
+			if (!declaration.isExternal())
 			{
-				builder.append(declaration.getDeclaringClass().getName()).append('.');
-			}
-			else if (declaration instanceof Constructor == false && !declaration.isLocal())
-			{
-				if (node().getDeclaration() instanceof ReferenceParameter)
+				if (!declaration.isInstance())
 				{
-					return super.writeExpression(builder);
+					builder.append(declaration.getDeclaringClass().getName()).append('.');
 				}
-				
-				builder.append("this.");
+				else if (declaration instanceof Constructor == false && !declaration.isLocal())
+				{
+					if (node().getDeclaration() instanceof ReferenceParameter)
+					{
+						return super.writeExpression(builder);
+					}
+					
+					builder.append("this.");
+				}
 			}
 		}
 		
