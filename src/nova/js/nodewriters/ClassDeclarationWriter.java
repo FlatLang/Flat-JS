@@ -77,7 +77,7 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 	@Override
 	public StringBuilder writeName(StringBuilder builder)
 	{
-		for (String c : new String[] { "nova/Object", "nova/String", "nova/io/Console", "nova/datastruct/list/Array", "nova/time/Date", "nova/math/Math" })
+		for (String c : new String[] { "nova/Object", "nova/String", "nova/io/Console", "nova/datastruct/list/Array", "nova/time/Date", "nova/math/Math", "nova/datastruct/Node" })
 		{
 			if (node().getClassLocation().equals(c))
 			{
