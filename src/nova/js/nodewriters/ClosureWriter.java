@@ -1,6 +1,7 @@
 package nova.js.nodewriters;
 
 import net.fathomsoft.nova.tree.*;
+import net.fathomsoft.nova.tree.lambda.LambdaMethodDeclaration;
 
 public abstract class ClosureWriter extends VariableWriter
 {
@@ -9,6 +10,11 @@ public abstract class ClosureWriter extends VariableWriter
 	@Override
 	public StringBuilder writeExpression(StringBuilder builder)
 	{
-		return getWriter(node().getMethodDeclaration()).writeExpression(builder);
+		if (node().getMethodDeclaration() instanceof LambdaMethodDeclaration)
+		{
+			return getWriter(node().getMethodDeclaration()).writeExpression(builder);
+		}
+		
+		return super.writeExpression(builder);
 	}
 }
