@@ -1,8 +1,8 @@
 package nova.js.nodewriters;
 
 import net.fathomsoft.nova.tree.*;
-import net.fathomsoft.nova.tree.variables.FieldList;
-import net.fathomsoft.nova.tree.variables.InstanceFieldList;
+
+import java.util.Arrays;
 
 public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 {
@@ -11,7 +11,7 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 	@Override
 	public StringBuilder write(StringBuilder builder)
 	{
-		builder.append("var ").append(node().getName()).append(" = function () {\n");
+		builder.append("var ").append(writeName()).append(" = function () {\n");
 		
 		getWriter(node().getFieldList().getPrivateFieldList()).write(builder);
 		getWriter(node().getFieldList().getPublicFieldList()).write(builder);
@@ -26,37 +26,65 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 		
 		if (node().doesExtendClass())
 		{
-			builder.append(node().getName()).append(".prototype = Object.create(").append(node().getExtendedClassDeclaration().getName()).append(".prototype);\n");
-			builder.append(node().getName()).append(".prototype.constructor = ").append(node().getName()).append(";\n\n");
+			writeName(builder).append(".prototype = Object.create(").append(getWriter(node().getExtendedClassDeclaration()).writeName()).append(".prototype);\n");
+			writeName(builder).append(".prototype.constructor = ").append(writeName()).append(";\n\n");
 			
-			// TODO: save overridden functions here....
+			node().getExtendedClassDeclaration().getMethodList().forEachNovaMethod(method -> {
+				getWriter(method).writePrototypeAssignment(builder, node(), true);
+			});
+			/*node().getMethodList().forEachNovaMethod(method -> {
+				getWriter(method).writePrototypeAssignment(builder, node(), true);
+			});*/
+			
+			builder.append("\n");
 		}
 		
-		getWriter(node().getConstructorList()).write(builder);
+		node().getInterfacesImplementationList().forEachVisibleListChild(i -> {
+			Arrays.stream(i.getTypeClass().getMethods()).forEach(method -> {
+				getWriter(method).writePrototypeAssignment(builder, node());
+			});
+		});
+		
+		builder.append("\n");
+		
 		getWriter(node().getDestructorList()).write(builder);
 		getWriter(node().getMethodList()).write(builder);
 		getWriter(node().getPropertyMethodList()).write(builder);
 		getWriter(node().getHiddenMethodList()).write(builder);
 		getWriter(node().getVirtualMethodList()).write(builder);
-		
-		generateStaticBlocksSource(builder);
+		getWriter(node().getConstructorList()).write(builder);
 		
 		return builder;
 	}
 	
-	private StringBuilder generateStaticBlocksSource(final StringBuilder builder)
+	public StringBuilder writeStaticBlocks(final StringBuilder builder)
 	{
 		if (node().getStaticBlockList().getNumVisibleChildren() > 0)
 		{
-			builder.append('\n');
-			
 			node().getStaticBlockList().forEachVisibleChild(block -> {
+				if (block.getScope().getNumVisibleChildren() > 0)
+				{
+					builder.append('\n');
+				}
+				
 				getWriter(block).write(builder);
 			});
-			
-			builder.append('\n');
 		}
 		
 		return builder;
+	}
+	
+	@Override
+	public StringBuilder writeName(StringBuilder builder)
+	{
+		for (String c : new String[] { "nova/Object", "nova/String", "nova/io/Console", "nova/datastruct/list/Array", "nova/time/Date", "nova/math/Math" })
+		{
+			if (node().getClassLocation().equals(c))
+			{
+				return builder.append("Nova").append(node().getName());
+			}
+		}
+		
+		return super.writeName(builder);
 	}
 }
