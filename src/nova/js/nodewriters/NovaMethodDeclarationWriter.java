@@ -8,6 +8,19 @@ public abstract class NovaMethodDeclarationWriter extends MethodDeclarationWrite
 	
 	public StringBuilder writeName(StringBuilder builder)
 	{
+		super.writeName(builder);
+		writeOverload(builder);
+		
+		return builder;
+	}
+	
+	public StringBuilder writeOverload()
+	{
+		return writeOverload(new StringBuilder());
+	}
+	
+	public StringBuilder writeOverload(StringBuilder builder)
+	{
 		String name = node().getName();
 		
 		if (node().getOverloadID() >= 0)
@@ -20,20 +33,35 @@ public abstract class NovaMethodDeclarationWriter extends MethodDeclarationWrite
 			}
 		}
 		
-		builder.append(name);
-		
-		return builder;
+		return builder.append(name.substring(node().getName().length()));
 	}
 	
 	public StringBuilder writeAssignedVariable()
 	{
-		return writeName(new StringBuilder());
+		return writeAssignedVariable(new StringBuilder());
 	}
 	
 	public StringBuilder writeAssignedVariable(StringBuilder builder)
 	{
 		String prototype = node().isStatic() ? "" : ".prototype";
 		
-		return builder.append(node().getParentClass().getName()).append(prototype).append(".").append(writeName());
+		return getWriter(node().getParentClass()).writeName(builder).append(prototype).append(".").append(writeName());
+	}
+	
+	public StringBuilder writePrototypeAssignment(ClassDeclaration clazz)
+	{
+		return writePrototypeAssignment(new StringBuilder(), clazz);	
+	}
+	
+	public StringBuilder writePrototypeAssignment(StringBuilder builder, ClassDeclaration clazz)
+	{
+		return writePrototypeAssignment(builder, clazz, false);
+	}
+		
+	public StringBuilder writePrototypeAssignment(StringBuilder builder, ClassDeclaration clazz, boolean superCall)
+	{
+		String prototype = node().isStatic() ? "" : ".prototype";
+		
+		return getWriter(clazz).writeName(builder).append(prototype).append('.').append(getWriter(node()).writeName()).append(superCall ? "_base" : "").append(" = ").append(getWriter(node()).writeAssignedVariable()).append(";\n");
 	}
 }

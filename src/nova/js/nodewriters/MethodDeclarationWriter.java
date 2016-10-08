@@ -6,13 +6,13 @@ public abstract class MethodDeclarationWriter extends InstanceDeclarationWriter
 {
 	public abstract MethodDeclaration node();
 	
-	public StringBuilder writeName()
+	public StringBuilder writeSignature()
 	{
-		return writeName(new StringBuilder());
+		return writeSignature(new StringBuilder());
 	}
-
-	public StringBuilder writeName(StringBuilder builder)
+	
+	public StringBuilder writeSignature(StringBuilder builder)
 	{
-		return builder.append(node().getName());
+		return builder.append("function ").append(getWriter(node().getParameterList()).write());
 	}
 }

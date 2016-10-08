@@ -23,6 +23,17 @@ public class Writer
 				}
 			};
 		}
+		else if (node instanceof InitializationMethod)
+		{
+			return new InitializationMethodWriter()
+			{
+				@Override
+				public InitializationMethod node()
+				{
+					return (InitializationMethod)node;
+				}
+			};
+		}
 		else if (node instanceof Super)
 		{
 			return new SuperWriter()

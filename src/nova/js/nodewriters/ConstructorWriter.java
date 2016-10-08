@@ -11,14 +11,17 @@ public abstract class ConstructorWriter extends BodyMethodDeclarationWriter
 	{
 		builder.append("{\n");
 		
-		getWriter(node().getScope()).write(builder, false, true);
-		
 		ClassDeclaration extended = node().getDeclaringClass().getExtendedClassDeclaration();
 		
 		if (extended != null)
 		{
-			builder.append(extended.getName()).append(".call(this);\n");
+			getWriter(extended).writeName(builder).append(".call(this);\n");
 		}
+		
+		getWriter(node().getDeclaringClass()).writeName(builder).append(".call(this);\n");
+		builder.append("this.__proto__ = ").append(getWriter(node().getDeclaringClass()).writeName()).append(".prototype;\n\n");
+		
+		getWriter(node().getScope()).write(builder, false, true);
 		
 		return builder.append('}');
 	}
@@ -26,6 +29,22 @@ public abstract class ConstructorWriter extends BodyMethodDeclarationWriter
 	@Override
 	public StringBuilder writeAssignedVariable(StringBuilder builder)
 	{
-		return builder.append("novaConstructors.new").append(writeName());
+		return writeName(builder);//builder.append("novaConstructors.new").append(writeName());
+	}
+	
+	public StringBuilder writeConstructorListName()
+	{
+		return writeConstructorListName(new StringBuilder());
+	}
+	
+	public StringBuilder writeConstructorListName(StringBuilder builder)
+	{
+		return builder.append("new").append(super.writeName(new StringBuilder()));
+	}
+	
+	@Override
+	public StringBuilder writeName(StringBuilder builder)
+	{
+		return builder.append("novaConstructors.").append(writeConstructorListName());
 	}
 }

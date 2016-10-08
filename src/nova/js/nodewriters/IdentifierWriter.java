@@ -18,6 +18,16 @@ public abstract class IdentifierWriter extends ValueWriter implements Accessible
 	
 	public StringBuilder writeUseExpression(StringBuilder builder)
 	{
+		return writeName(builder);
+	}
+	
+	public StringBuilder writeName()
+	{
+		return writeName(new StringBuilder());
+	}
+	
+	public StringBuilder writeName(StringBuilder builder)
+	{
 		return builder.append(node().getName());
 	}
 }

@@ -1,6 +1,7 @@
 package nova.js.nodewriters;
 
 import net.fathomsoft.nova.tree.*;
+import net.fathomsoft.nova.tree.variables.ObjectReference;
 
 public abstract class MethodCallWriter extends VariableWriter
 {
@@ -14,6 +15,11 @@ public abstract class MethodCallWriter extends VariableWriter
 		if (callable instanceof MethodDeclaration)
 		{
 			getWriter((MethodDeclaration)callable).writeName(builder);
+			
+			if (node().isSuperCall())
+			{
+				builder.append("_base");
+			}
 		}
 		else
 		{

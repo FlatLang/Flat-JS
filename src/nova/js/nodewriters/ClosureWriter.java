@@ -6,5 +6,9 @@ public abstract class ClosureWriter extends VariableWriter
 {
 	public abstract Closure node();
 	
-	
+	@Override
+	public StringBuilder writeExpression(StringBuilder builder)
+	{
+		return getWriter(node().getMethodDeclaration()).writeExpression(builder);
+	}
 }

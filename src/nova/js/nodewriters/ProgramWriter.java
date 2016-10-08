@@ -41,12 +41,35 @@ public abstract class ProgramWriter extends TypeListWriter
 			builder.append("(function () {\n");
 		}
 		
-		builder.append("var novaConstructors = {};\n\n");
+		ClassDeclaration[] classes = getClassesHierarchicalInOrder();
 		
-		for (ClassDeclaration child : getClassesHierarchicalInOrder())
+		builder.append("var novaConstructors = {\n");
+		
+		for (ClassDeclaration child : classes)
+		{
+			child.getConstructorList().forEachVisibleListChild(constructor -> {
+				getWriter((Constructor)constructor).writeConstructorListName(builder).append(": function() {},\n");
+			});
+		}
+		
+		builder.append("};\n\n");
+		
+		builder.append("var nova_null = undefined;\n\n");
+		
+		for (ClassDeclaration child : classes)
 		{
 			getWriter(child).write(builder);
 		}
+		
+		for (ClassDeclaration child : classes)
+		{
+			getWriter(child).writeStaticBlocks(builder);
+		}
+		
+		builder.append('\n');
+		
+		NovaMethodDeclaration method = node().getTree().getMainMethod(node().getController().codeGeneratorEngine.mainClass);
+		getWriter(method.getDeclaringClass()).writeName(builder).append('.').append(getWriter(method).writeName()).append("();\n");
 		
 		if (localScope)
 		{

@@ -20,7 +20,7 @@ public abstract class VariableWriter extends IdentifierWriter
 			{
 				if (!declaration.isInstance())
 				{
-					builder.append(declaration.getDeclaringClass().getName()).append('.');
+					getWriter(declaration.getDeclaringClass()).writeName(builder).append('.');
 				}
 				else if (declaration instanceof Constructor == false && !declaration.isLocal())
 				{

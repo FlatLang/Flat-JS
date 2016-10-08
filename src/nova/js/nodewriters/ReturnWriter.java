@@ -15,7 +15,7 @@ public abstract class ReturnWriter extends IValueWriter
 		{
 			builder.append(' ');
 			
-			getWriter(node().getReturnedNode()).writeExpression(builder);
+			getWriter(node().getValueNode()).writeExpression(builder);
 		}
 		
 		return builder;
