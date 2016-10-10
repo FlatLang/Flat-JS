@@ -9,9 +9,17 @@ public abstract class ArgumentListWriter extends ListWriter
 	@Override
 	public StringBuilder write(StringBuilder builder)
 	{
+		return write(builder, true);
+	}
+	
+	public StringBuilder write(StringBuilder builder, boolean parenthesis)
+	{
 		final int[] i = new int[] { 0 };
 		
-		builder.append('(');
+		if (parenthesis)
+		{
+			builder.append('(');
+		}
 		
 		node().forEachVisibleChild(child -> {
 			if (i[0]++ > 0)
@@ -22,6 +30,11 @@ public abstract class ArgumentListWriter extends ListWriter
 			getWriter(child).writeExpression(builder);
 		});
 		
-		return builder.append(')');
+		if (parenthesis)
+		{
+			builder.append(')');
+		}
+		
+		return builder;
 	}
 }
