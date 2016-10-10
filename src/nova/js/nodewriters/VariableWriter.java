@@ -1,6 +1,7 @@
 package nova.js.nodewriters;
 
 import net.fathomsoft.nova.tree.Constructor;
+import net.fathomsoft.nova.tree.InitializationMethod;
 import net.fathomsoft.nova.tree.ReferenceParameter;
 import net.fathomsoft.nova.tree.variables.Variable;
 import net.fathomsoft.nova.tree.variables.VariableDeclaration;
@@ -19,6 +20,10 @@ public abstract class VariableWriter extends IdentifierWriter
 			if (!declaration.isExternal())
 			{
 				if (!declaration.isInstance())
+				{
+					getWriter(declaration.getDeclaringClass()).writeName(builder).append('.');
+				}
+				else if (declaration instanceof InitializationMethod)
 				{
 					getWriter(declaration.getDeclaringClass()).writeName(builder).append('.');
 				}
