@@ -11,14 +11,14 @@ public abstract class NodeWriter extends Writer
 		return write(new StringBuilder());
 	}
 	
-	public StringBuilder writeExpression()
-	{
-		return writeExpression(new StringBuilder());
-	}
-	
 	public StringBuilder write(final StringBuilder builder)
 	{
 		return writeExpression(builder).append(";\n");
+	}
+	
+	public StringBuilder writeExpression()
+	{
+		return writeExpression(new StringBuilder());
 	}
 	
 	public StringBuilder writeExpression(final StringBuilder builder)
