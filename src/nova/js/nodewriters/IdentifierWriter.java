@@ -9,8 +9,12 @@ public abstract class IdentifierWriter extends ValueWriter implements Accessible
 	@Override
 	public StringBuilder writeExpression(StringBuilder builder)
 	{
+		if (isInstanceClosure())
+		{
+			return writeInstanceClosure(builder);
+		}
+		
 		writeUseExpression(builder);
-		writeArrayAccess(builder);
 		writeAccessedExpression(builder);
 		
 		return builder;
@@ -18,7 +22,7 @@ public abstract class IdentifierWriter extends ValueWriter implements Accessible
 	
 	public StringBuilder writeUseExpression(StringBuilder builder)
 	{
-		return writeName(builder);
+		return writeName(builder).append(writeArrayAccess());
 	}
 	
 	public StringBuilder writeName()

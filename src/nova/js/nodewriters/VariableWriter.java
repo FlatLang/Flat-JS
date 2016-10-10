@@ -13,6 +13,11 @@ public abstract class VariableWriter extends IdentifierWriter
 	@Override
 	public StringBuilder writeExpression(StringBuilder builder)
 	{
+		if (isInstanceClosure())
+		{
+			return writeInstanceClosure(builder);
+		}
+		
 		if (!node().isAccessed())
 		{
 			VariableDeclaration declaration = node().getDeclaration();
