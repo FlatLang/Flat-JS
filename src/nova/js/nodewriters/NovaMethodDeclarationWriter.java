@@ -21,19 +21,19 @@ public abstract class NovaMethodDeclarationWriter extends MethodDeclarationWrite
 	
 	public StringBuilder writeOverload(StringBuilder builder)
 	{
-		String name = node().getName();
-		
 		if (node().getOverloadID() >= 0)
 		{
-			name += node().getOverloadID();
+			String overload = node().getOverloadID() + "";
 			
-			while (node().getParentClass().containsMethod(name))
+			while (node().getParentClass().containsMethod(node().getName() + overload))
 			{
-				name += '_';
+				overload += '_';
 			}
+			
+			return builder.append(overload);
 		}
 		
-		return builder.append(name.substring(node().getName().length()));
+		return builder;
 	}
 	
 	public StringBuilder writeAssignedVariable()
@@ -43,14 +43,22 @@ public abstract class NovaMethodDeclarationWriter extends MethodDeclarationWrite
 	
 	public StringBuilder writeAssignedVariable(StringBuilder builder)
 	{
-		String prototype = node().isStatic() ? "" : ".prototype";
-		
-		return getWriter(node().getParentClass()).writeName(builder).append(prototype).append(".").append(writeName());
+		return getWriter(node().getParentClass()).writeName(builder).append(writePrototypeAccess()).append(".").append(writeName());
+	}
+	
+	public StringBuilder writeSuperName()
+	{
+		return writeSuperName(new StringBuilder());
+	}
+	
+	public StringBuilder writeSuperName(StringBuilder builder)
+	{
+		return writeName(builder).append("_base").append(getWriter(node().getDeclaringClass()).writeName());
 	}
 	
 	public StringBuilder writePrototypeAssignment(ClassDeclaration clazz)
 	{
-		return writePrototypeAssignment(new StringBuilder(), clazz);	
+		return writePrototypeAssignment(new StringBuilder(), clazz);
 	}
 	
 	public StringBuilder writePrototypeAssignment(StringBuilder builder, ClassDeclaration clazz)
@@ -60,8 +68,17 @@ public abstract class NovaMethodDeclarationWriter extends MethodDeclarationWrite
 		
 	public StringBuilder writePrototypeAssignment(StringBuilder builder, ClassDeclaration clazz, boolean superCall)
 	{
-		String prototype = node().isStatic() ? "" : ".prototype";
-		
-		return getWriter(clazz).writeName(builder).append(prototype).append('.').append(getWriter(node()).writeName()).append(superCall ? "_base" : "").append(" = ").append(getWriter(node()).writeAssignedVariable()).append(";\n");
+		return getWriter(clazz).writeName(builder).append(writePrototypeAccess()).append('.').append(superCall ? getWriter(node()).writeSuperName() : getWriter(node()).writeName()).append(" = ")
+			.append(getWriter(node()).writeAssignedVariable()).append(";\n");
+	}
+	
+	public StringBuilder writePrototypeAccess()
+	{
+		return writePrototypeAccess(new StringBuilder());
+	}
+	
+	public StringBuilder writePrototypeAccess(StringBuilder builder)
+	{
+		return builder.append(node().isStatic() ? "" : ".prototype");
 	}
 }
