@@ -8,15 +8,13 @@ public abstract class InstantiationWriter extends IIdentifierWriter
 	public abstract Instantiation node();
 	
 	@Override
-	public StringBuilder writeExpression(StringBuilder builder)
+	public StringBuilder writeUseExpression(StringBuilder builder)
 	{
 		if (node().getIdentifier() instanceof Array == false)
 		{
 			builder.append("new ");
 		}
 		
-		getWriter(node().getIdentifier()).writeExpression(builder);
-		
-		return builder;
+		return getWriter(node().getIdentifier()).writeUseExpression(builder);
 	}
 }

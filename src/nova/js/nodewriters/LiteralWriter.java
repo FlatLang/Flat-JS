@@ -6,8 +6,7 @@ public abstract class LiteralWriter extends IValueWriter implements AccessibleWr
 {
 	public abstract Literal node();
 	
-	@Override
-	public StringBuilder writeExpression(final StringBuilder builder)
+	public StringBuilder writeUseExpression(StringBuilder builder)
 	{
 		if (node().isStringInstantiation())
 		{
@@ -18,6 +17,17 @@ public abstract class LiteralWriter extends IValueWriter implements AccessibleWr
 			builder.append(node().value);
 		}
 		
-		return writeAccessedExpression(builder);
+		return writeArrayAccess(builder);
+	}
+	
+	@Override
+	public StringBuilder writeExpression(final StringBuilder builder)
+	{
+		if (isInstanceClosure())
+		{
+			return writeInstanceClosure(builder);
+		}
+		
+		return writeUseExpression(builder).append(writeAccessedExpression());
 	}
 }
