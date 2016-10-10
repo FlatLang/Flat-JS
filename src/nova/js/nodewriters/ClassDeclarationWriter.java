@@ -51,7 +51,6 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 		getWriter(node().getMethodList()).write(builder);
 		getWriter(node().getPropertyMethodList()).write(builder);
 		getWriter(node().getHiddenMethodList()).write(builder);
-		getWriter(node().getVirtualMethodList()).write(builder);
 		getWriter(node().getConstructorList()).write(builder);
 		
 		return builder;
