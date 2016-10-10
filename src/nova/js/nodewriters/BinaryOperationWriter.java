@@ -9,6 +9,45 @@ public abstract class BinaryOperationWriter extends IValueWriter
 	@Override
 	public StringBuilder writeExpression(StringBuilder builder)
 	{
-		return getWriter(node().getLeftOperand()).writeExpression(builder).append(' ').append(getWriter(node().getOperator()).write()).append(' ').append(getWriter(node().getRightOperand()).writeExpression());
+		boolean requiresFloor = false;
+		
+		ClassDeclaration charClass = node().getProgram().getClassDeclaration("nova/primitive/number/Char");
+		
+		if (node().getOperator().getOperator().equals("/"))
+		{
+			ClassDeclaration integer = node().getProgram().getClassDeclaration("nova/primitive/number/Integer");
+			
+			requiresFloor = node().getLeftOperand().getTypeClass().implementsInterface(integer) && node().getRightOperand().getTypeClass().implementsInterface(integer);
+		}
+		
+		if (requiresFloor)
+		{
+			builder.append("Math.floor(");
+		}
+		
+		getWriter(node().getLeftOperand()).writeExpression(builder);
+		
+		boolean numerical = node().getOperator().isNumerical();
+		
+		if (numerical && node().getLeftOperand().getReturnedNode().getTypeClass() == charClass)
+		{
+			builder.append(".charCodeAt(0)");
+		}
+		
+		builder.append(' ').append(getWriter(node().getOperator()).write()).append(' ');
+		
+		builder.append(getWriter(node().getRightOperand()).writeExpression());
+		
+		if (numerical && node().getRightOperand().getReturnedNode().getTypeClass() == charClass)
+		{
+			builder.append(".charCodeAt(0)");
+		}
+		
+		if (requiresFloor)
+		{
+			builder.append(')');
+		}
+		
+		return builder;
 	}
 }
