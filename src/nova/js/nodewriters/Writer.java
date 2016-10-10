@@ -23,6 +23,17 @@ public class Writer
 				}
 			};
 		}
+		else if (node instanceof ExternalCodeBlock)
+		{
+			return new ExternalCodeBlockWriter()
+			{
+				@Override
+				public ExternalCodeBlock node()
+				{
+					return (ExternalCodeBlock)node;
+				}
+			};
+		}
 		else if (node instanceof InitializationMethod)
 		{
 			return new InitializationMethodWriter()
