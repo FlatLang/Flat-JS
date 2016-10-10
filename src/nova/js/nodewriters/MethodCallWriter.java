@@ -14,11 +14,13 @@ public abstract class MethodCallWriter extends VariableWriter
 		
 		if (callable instanceof MethodDeclaration)
 		{
-			getWriter((MethodDeclaration)callable).writeName(builder);
-			
 			if (node().isSuperCall())
 			{
-				builder.append("_base");
+				getWriter((NovaMethodDeclaration)callable).writeSuperName(builder);
+			}
+			else
+			{
+				getWriter((MethodDeclaration)callable).writeName(builder);
 			}
 		}
 		else
@@ -26,7 +28,21 @@ public abstract class MethodCallWriter extends VariableWriter
 			builder.append(node().getName());
 		}
 		
-		getWriter(node().getArgumentList()).write(builder);
+		if (callable instanceof InitializationMethod)
+		{
+			builder.append(".call(this");
+			
+			if (node().getArgumentList().getNumVisibleChildren() > 0)
+			{
+				builder.append(", ");
+			}
+			
+			getWriter(node().getArgumentList()).write(builder, false).append(')');
+		}
+		else
+		{
+			getWriter(node().getArgumentList()).write(builder);
+		}
 		
 		return builder;
 	}
