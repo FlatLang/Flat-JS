@@ -44,6 +44,6 @@ public abstract class MethodCallWriter extends VariableWriter
 			getWriter(node().getArgumentList()).write(builder);
 		}
 		
-		return builder;
+		return writeArrayAccess(builder);
 	}
 }
