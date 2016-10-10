@@ -32,9 +32,6 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 			node().getExtendedClassDeclaration().getMethodList().forEachNovaMethod(method -> {
 				getWriter(method).writePrototypeAssignment(builder, node(), true);
 			});
-			/*node().getMethodList().forEachNovaMethod(method -> {
-				getWriter(method).writePrototypeAssignment(builder, node(), true);
-			});*/
 			
 			builder.append("\n");
 		}
