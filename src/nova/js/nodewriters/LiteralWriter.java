@@ -9,7 +9,14 @@ public abstract class LiteralWriter extends IValueWriter implements AccessibleWr
 	@Override
 	public StringBuilder writeExpression(final StringBuilder builder)
 	{
-		builder.append(node().value);
+		if (node().isStringInstantiation())
+		{
+			getWriter(node().getStringInstantiation()).writeExpression(builder);
+		}
+		else
+		{
+			builder.append(node().value);
+		}
 		
 		return writeAccessedExpression(builder);
 	}
