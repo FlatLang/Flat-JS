@@ -2,7 +2,7 @@ package nova.js.nodewriters;
 
 import net.fathomsoft.nova.tree.*;
 
-public abstract class ImportListWriter extends ListWriter
+public abstract class ImportListWriter extends TypeListWriter
 {
 	public abstract ImportList node();
 	
