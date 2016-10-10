@@ -9,6 +9,6 @@ public abstract class PriorityWriter extends ValueWriter implements AccessibleWr
 	@Override
 	public StringBuilder writeExpression(StringBuilder builder)
 	{
-		return builder.append('(').append(getWriter(node().getContents()).writeExpression()).append(')').append(writeAccessedExpression());
+		return builder.append('(').append(getWriter(node().getContents()).writeExpression()).append(')').append(writeArrayAccess()).append(writeAccessedExpression());
 	}
 }
