@@ -9,21 +9,15 @@ public abstract class RepeatWriter extends LoopWriter
 	@Override
 	public StringBuilder write(StringBuilder builder)
 	{
-		Value value = node().getValueNode();
-		
-		if (value != null)
+		if (node().getValueNode() != null)
 		{
-			builder.append("for (").append(node().getName()).append(" = 0; ").append(node().getName()).append(" < ").append(getWriter(value).writeExpression()).append("; ").append(node().getName()).append("++) ");
+			builder.append("for (").append(node().getName()).append(" = 0; ").append(node().getName()).append(" < ").append(getWriter(node().getValueNode()).writeExpression()).append("; ").append(node().getName()).append("++) ");
 		}
 		else
 		{
 			builder.append("for (;;) ");
 		}
 		
-		Scope scope = node().getScope();
-		
-		getWriter(scope).write(builder);
-		
-		return builder;
+		return getWriter(node().getScope()).write(builder);
 	}
 }
