@@ -19,7 +19,7 @@ public abstract class CaseWriter extends MatchCaseWriter
 		{
 			Value value = node().getValue();
 			
-			builder.append("case " + getWriter(value).writeExpression() + ":\n");
+			builder.append("case ").append(getWriter(value).writeExpression()).append(":\n");
 			
 			getWriter(scope).write(builder, false);
 			
@@ -58,7 +58,7 @@ public abstract class CaseWriter extends MatchCaseWriter
 			
 			Value value = node().getValue();
 			
-			builder.append("if (" + fall + control + " == " + getWriter(value).writeExpression() + ") {\n");
+			builder.append("if (").append(fall).append(control).append(" == ").append(getWriter(value).writeExpression()).append(") {\n");
 			
 			getWriter(scope).write(builder, false);
 			

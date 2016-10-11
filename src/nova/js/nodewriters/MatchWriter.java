@@ -17,7 +17,7 @@ public abstract class MatchWriter extends ControlStatementWriter
 		{
 			Value control = node().getControlValue();
 			
-			builder.append("switch (" + getWriter(control).writeExpression() + ") ");
+			builder.append("switch (").append(getWriter(control).writeExpression()).append(") ");
 			
 			getWriter(scope).write(builder);
 		}
