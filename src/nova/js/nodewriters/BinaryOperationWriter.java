@@ -22,7 +22,7 @@ public abstract class BinaryOperationWriter extends IValueWriter
 		
 		if (requiresFloor)
 		{
-			builder.append("Math.floor(");
+			builder.append("(~~");
 		}
 		
 		getWriter(node().getLeftOperand()).writeExpression(builder);
