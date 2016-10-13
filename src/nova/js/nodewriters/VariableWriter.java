@@ -3,6 +3,7 @@ package nova.js.nodewriters;
 import net.fathomsoft.nova.tree.Constructor;
 import net.fathomsoft.nova.tree.InitializationMethod;
 import net.fathomsoft.nova.tree.ReferenceParameter;
+import net.fathomsoft.nova.tree.lambda.LambdaMethodDeclaration;
 import net.fathomsoft.nova.tree.variables.Variable;
 import net.fathomsoft.nova.tree.variables.VariableDeclaration;
 
@@ -39,7 +40,16 @@ public abstract class VariableWriter extends IdentifierWriter
 						return super.writeExpression(builder);
 					}
 					
-					builder.append("this.");
+					if (node().getParentMethod() instanceof LambdaMethodDeclaration)
+					{
+						builder.append("self");
+					}
+					else
+					{
+						builder.append("this");
+					}
+					
+					builder.append('.');
 				}
 			}
 		}

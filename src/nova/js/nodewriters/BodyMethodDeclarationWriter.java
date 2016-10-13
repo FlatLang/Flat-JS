@@ -1,6 +1,7 @@
 package nova.js.nodewriters;
 
 import net.fathomsoft.nova.tree.*;
+import net.fathomsoft.nova.tree.lambda.LambdaMethodDeclaration;
 
 public abstract class BodyMethodDeclarationWriter extends NovaMethodDeclarationWriter
 {
@@ -23,8 +24,22 @@ public abstract class BodyMethodDeclarationWriter extends NovaMethodDeclarationW
 		return writeBody(new StringBuilder());
 	}
 	
+	private static boolean isLambda(Node n)
+	{
+		return ((Closure)n).isLambda();
+	}
+	
 	public StringBuilder writeBody(StringBuilder builder)
 	{
-		return getWriter(node().getScope()).write(builder, true, false);
+		builder.append("{\n");
+		
+		if (node().whereChildOfType(Closure.class, BodyMethodDeclarationWriter::isLambda))
+		{
+			builder.append("var self = this;\n\n");
+		}
+		
+		getWriter(node().getScope()).write(builder, false);
+		
+		return builder.append('}');
 	}
 }
