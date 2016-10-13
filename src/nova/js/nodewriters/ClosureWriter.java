@@ -10,14 +10,14 @@ public abstract class ClosureWriter extends VariableWriter
 	@Override
 	public StringBuilder writeExpression(StringBuilder builder)
 	{
-		if (isInstanceClosure())
-		{
-			return writeInstanceClosure(builder);
-		}
-		
 		if (node().getMethodDeclaration() instanceof LambdaMethodDeclaration)
 		{
 			return getWriter(node().getMethodDeclaration()).writeExpression(builder);
+		}
+		
+		if (isInstanceClosure())
+		{
+			return writeInstanceClosure(builder);
 		}
 		
 		return super.writeExpression(builder);
