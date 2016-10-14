@@ -23,6 +23,17 @@ public class Writer
 				}
 			};
 		}
+		else if (node instanceof DefaultArgument)
+		{
+			return new DefaultArgumentWriter()
+			{
+				@Override
+				public DefaultArgument node()
+				{
+					return (DefaultArgument)node;
+				}
+			};
+		}
 		else if (node instanceof ExternalCodeBlock)
 		{
 			return new ExternalCodeBlockWriter()
