@@ -13,16 +13,22 @@ public abstract class BinaryOperationWriter extends IValueWriter
 		
 		ClassDeclaration charClass = node().getProgram().getClassDeclaration("nova/primitive/number/Char");
 		
-		if (node().getOperator().getOperator().equals("/"))
+		if (node().getOperator().getOperator().equals("/") || node().getOperator().getOperator().equals("%"))
 		{
 			ClassDeclaration integer = node().getProgram().getClassDeclaration("nova/primitive/number/Integer");
-			
-			requiresFloor = node().getLeftOperand().getTypeClass().implementsInterface(integer) && node().getRightOperand().getTypeClass().implementsInterface(integer);
+
+			requiresFloor = node().getLeftOperand().getReturnedNode().getTypeClass().isOfType(integer) &&
+					node().getRightOperand().getReturnedNode().getTypeClass().isOfType(integer);
+
+			if (!requiresFloor) {
+				builder.append("/*").append(node().getLeftOperand().getReturnedNode().getType()).append("*/");
+				builder.append("/*").append(node().getRightOperand().getReturnedNode().getType()).append("*/");
+			}
 		}
 		
 		if (requiresFloor)
 		{
-			builder.append("(~~");
+			builder.append("~~(");
 		}
 		
 		getWriter(node().getLeftOperand()).writeExpression(builder);
@@ -33,8 +39,12 @@ public abstract class BinaryOperationWriter extends IValueWriter
 		{
 			builder.append(".charCodeAt(0)");
 		}
-		
-		builder.append(' ').append(getWriter(node().getOperator()).write()).append(' ');
+
+		if (node().getOperator().getOperator().equals(Operator.EQUALS)) {
+			builder.append(' ').append("===").append(' ');
+		} else {
+			builder.append(' ').append(getWriter(node().getOperator()).write()).append(' ');
+		}
 		
 		builder.append(getWriter(node().getRightOperand()).writeExpression());
 		

@@ -9,8 +9,14 @@ public abstract class FieldDeclarationWriter extends InstanceDeclarationWriter
 	@Override
 	public StringBuilder write(StringBuilder builder)
 	{
-		builder.append("this.");
-		
+		if (node().isStatic()) {
+			getWriter(node().getDeclaringClass()).writeUseExpression(builder);
+		} else {
+			builder.append("this");
+		}
+
+		builder.append(".");
+
 		return super.write(builder);
 	}
 }

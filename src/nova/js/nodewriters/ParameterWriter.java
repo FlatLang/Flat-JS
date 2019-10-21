@@ -9,6 +9,6 @@ public abstract class ParameterWriter extends LocalDeclarationWriter
 	@Override
 	public StringBuilder writeExpression(StringBuilder builder)
 	{
-		return builder.append(node().getName());
+		return writeName(builder);
 	}
 }

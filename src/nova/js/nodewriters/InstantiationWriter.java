@@ -10,11 +10,22 @@ public abstract class InstantiationWriter extends IIdentifierWriter
 	@Override
 	public StringBuilder writeUseExpression(StringBuilder builder)
 	{
-		if (node().getIdentifier() instanceof Array == false)
-		{
-			builder.append("new ");
+		getWriter(node().getIdentifier()).writeUseExpression(builder);
+
+		writeNullFallbackPostfix(builder);
+
+		return builder;
+	}
+
+	@Override
+	public void writeNullFallbackPrefix(StringBuilder builder, int skipCount) {
+		super.writeNullFallbackPrefix(builder, skipCount + 1);
+	}
+
+	@Override
+	public void writeNullFallbackPostfix(StringBuilder builder) {
+		if (node().doesAccess()) {
+//			builder.append(")");
 		}
-		
-		return getWriter(node().getIdentifier()).writeUseExpression(builder);
 	}
 }

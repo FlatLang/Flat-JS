@@ -12,6 +12,7 @@ import net.fathomsoft.nova.util.SyntaxUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import static net.fathomsoft.nova.Nova.LIBRARY;
 import static nova.js.nodewriters.Writer.getWriter;
@@ -71,8 +72,17 @@ public class JSCodeGeneratorEngine extends CodeGeneratorEngine
 					File outputDir = getOutputDirectory(file);
 					
 					new File(outputDir, file.getPackage().getLocation()).mkdirs();
+
+					StringBuilder prototypeAssignments = new StringBuilder();
 					
-					writeFile(file.getPackage().getLocation() + "/" + file.getName() + ".js", outputDir, formatText(getWriter(file).write().toString()));
+					Arrays.stream(file.getClassDeclarations())
+						.forEach((c) -> {
+							getWriter(c).writeExtensionPrototypeAssignments(prototypeAssignments);
+							
+							prototypeAssignments.append("\n\n");
+						});
+					
+					writeFile(file.getPackage().getLocation() + "/" + file.getName() + ".js", outputDir, formatText(getWriter(file).write().toString() + "\n\n" + prototypeAssignments));
 				}
 				catch (IOException e)
 				{

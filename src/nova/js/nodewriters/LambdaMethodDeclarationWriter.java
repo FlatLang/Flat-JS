@@ -12,7 +12,12 @@ public abstract class LambdaMethodDeclarationWriter extends BodyMethodDeclaratio
 	{
 		return writeSignature(builder).append(' ').append(writeBody());
 	}
-	
+
+	@Override
+	public StringBuilder writeSignature(StringBuilder builder) {
+		return builder.append(getWriter(node().getParameterList()).write()).append(" =>");
+	}
+
 	@Override
 	public StringBuilder write(StringBuilder builder)
 	{
