@@ -19,7 +19,15 @@ public abstract class PriorityWriter extends ValueWriter implements AccessibleWr
 		{
 			return writeInstanceClosure(builder);
 		}
+
+		writeNullFallbackPrefix(builder);
 		
-		return writeUseExpression(builder).append(writeAccessedExpression());
+		writeUseExpression(builder);
+
+		writeNullFallbackPostfix(builder);
+
+		writeAccessedExpression(builder);
+
+		return builder;
 	}
 }

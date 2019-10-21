@@ -9,6 +9,10 @@ public abstract class LocalDeclarationWriter extends VariableDeclarationWriter
 	@Override
 	public StringBuilder write(StringBuilder builder)
 	{
-		return builder.append("var ").append(node().getName()).append(";\n");
+		builder.append("var ");
+		
+		writeName(builder);
+		
+		return builder.append(";\n");
 	}
 }

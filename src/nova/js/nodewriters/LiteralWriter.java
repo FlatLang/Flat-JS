@@ -27,7 +27,25 @@ public abstract class LiteralWriter extends IValueWriter implements AccessibleWr
 		{
 			return writeInstanceClosure(builder);
 		}
-		
-		return writeUseExpression(builder).append(writeAccessedExpression());
+
+		writeNullFallbackPrefix(builder);
+
+		writeUseExpression(builder);
+
+		writeNullFallbackPostfix(builder);
+
+		writeAccessedExpression(builder);
+
+		return builder;
+	}
+
+	@Override
+	public void writeNullFallbackPrefix(StringBuilder builder, int skipCount) {
+		AccessibleWriter.super.writeNullFallbackPrefix(builder, skipCount + 1);
+	}
+
+	@Override
+	public void writeNullFallbackPostfix(StringBuilder builder) {
+
 	}
 }

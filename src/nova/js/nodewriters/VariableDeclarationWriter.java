@@ -10,7 +10,7 @@ public abstract class VariableDeclarationWriter extends IIdentifierWriter
 	@Override
 	public StringBuilder writeExpression(StringBuilder builder)
 	{
-		return builder.append(node().getName()).append(" = ").append(writeDefaultValue());
+		return writeName(builder).append(" = ").append(writeDefaultValue());
 	}
 	
 	public StringBuilder writeDefaultValue()
@@ -26,7 +26,7 @@ public abstract class VariableDeclarationWriter extends IIdentifierWriter
 		}
 		else
 		{
-			builder.append(Value.NULL_IDENTIFIER);
+			builder.append("null");
 		}
 		
 		return builder;

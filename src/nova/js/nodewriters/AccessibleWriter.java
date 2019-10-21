@@ -1,6 +1,8 @@
 package nova.js.nodewriters;
 
+import net.fathomsoft.nova.Nova;
 import net.fathomsoft.nova.tree.*;
+import net.fathomsoft.nova.tree.variables.Variable;
 
 import static nova.js.nodewriters.Writer.getWriter;
 
@@ -22,7 +24,48 @@ public interface AccessibleWriter
 	{
 		return writeAccessedExpression(builder, true);
 	}
-	
+
+	static boolean shouldFallbackToNull(Accessible node) {
+		return node != null && !(node.getParent() instanceof Priority) && node instanceof Value &&
+				!node.isAccessed() &&
+				node.doesAccess() &&
+				!((Value)node).isPrimitive();
+	}
+
+	default void writeNullFallbackPrefix(StringBuilder builder) {
+		writeNullFallbackPrefix(builder, 0);
+	}
+
+	default void writeNullFallbackPrefix(StringBuilder builder, int skipCount) {
+		if (shouldFallbackToNull(node())) {
+			StringBuilder buffer = new StringBuilder();
+
+			Accessible current = node().getAccessedNode();
+
+			while (current != null) {
+				buffer.append("(");
+
+				current = current.getAccessedNode();
+			}
+
+			builder.append(buffer.substring(skipCount));
+		}
+	}
+
+	default void writeNullFallbackPostfix(StringBuilder builder) {
+		if (node().doesAccess()) {
+			Accessible current = node();
+
+			while (current != null && !shouldFallbackToNull(current)) {
+				current = current.getAccessingNode(true);
+			}
+
+			if (shouldFallbackToNull(current)) {
+				builder.append(" || nova_null)");
+			}
+		}
+	}
+
 	default StringBuilder writeAccessedExpression(StringBuilder builder, boolean dot)
 	{
 		if (node().doesAccess())

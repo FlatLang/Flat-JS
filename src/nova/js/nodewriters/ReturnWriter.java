@@ -1,6 +1,7 @@
 package nova.js.nodewriters;
 
 import net.fathomsoft.nova.tree.*;
+import net.fathomsoft.nova.tree.exceptionhandling.Throw;
 
 public abstract class ReturnWriter extends IValueWriter
 {
@@ -9,13 +10,16 @@ public abstract class ReturnWriter extends IValueWriter
 	@Override
 	public StringBuilder writeExpression(StringBuilder builder)
 	{
-		builder.append("return");
+		Value value = node().getValueNode();
 		
-		if (node().getValueNode() != null)
-		{
+		if (!(value instanceof Throw)) {
+			builder.append("return");
+		}
+		
+		if (value != null) {
 			builder.append(' ');
 			
-			getWriter(node().getValueNode()).writeExpression(builder);
+			getWriter(value).writeExpression(builder);
 		}
 		
 		return builder;

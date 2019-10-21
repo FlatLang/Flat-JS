@@ -1,5 +1,6 @@
 package nova.js.nodewriters;
 
+import net.fathomsoft.nova.Nova;
 import net.fathomsoft.nova.tree.*;
 
 public abstract class ForLoopWriter extends LoopWriter
@@ -12,7 +13,9 @@ public abstract class ForLoopWriter extends LoopWriter
 		Assignment initialization = node().getLoopInitialization();
 		Node       condition      = node().getCondition();
 		Node       update         = node().getLoopUpdate();
-		
+
+		getWriter(node().elementDeclaration).write(builder);
+
 		if (initialization != null)
 		{
 			getWriter(initialization).write(builder);//.append('\n');

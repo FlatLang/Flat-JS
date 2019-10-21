@@ -11,7 +11,9 @@ public abstract class MethodCallWriter extends VariableWriter
 	public StringBuilder writeUseExpression(StringBuilder builder)
 	{
 		CallableMethod callable = node().getCallableDeclaration();
-		
+
+		writeUsePrefix(builder);
+
 		if (callable instanceof MethodDeclaration)
 		{
 			if (node().isSuperCall())
@@ -30,20 +32,37 @@ public abstract class MethodCallWriter extends VariableWriter
 		
 		if (callable instanceof InitializationMethod)
 		{
-			builder.append(".call(this");
+			builder.append(".call(");
+
+			if (node().getParentMethod() instanceof Constructor) {
+				builder.append("__value");
+			} else {
+				builder.append("this");
+			}
 			
 			if (node().getArgumentList().getNumVisibleChildren() > 0)
 			{
 				builder.append(", ");
 			}
 			
-			getWriter(node().getArgumentList()).write(builder, false).append(')');
+			return getWriter(node().getArgumentList()).write(builder, false).append(')');
 		}
 		else
 		{
 			getWriter(node().getArgumentList()).write(builder);
 		}
 		
-		return writeArrayAccess(builder);
+		writeArrayAccess(builder);
+
+//		writeNullFallbackPostfix(builder);
+
+		return builder;
+	}
+
+	@Override
+	public void writeNullFallbackPostfix(StringBuilder builder) {
+		if (!(node().getNovaMethod() instanceof Constructor)) {
+			super.writeNullFallbackPostfix(builder);
+		}
 	}
 }

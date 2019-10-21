@@ -15,7 +15,7 @@ public abstract class CaseWriter extends MatchCaseWriter
 	{
 		Scope scope = node().getScope();
 		
-		if (node().getParentSwitch().isConventionalSwitch())
+		if (node().getParentMatch().isConventionalSwitch())
 		{
 			Value value = node().getValue();
 			
@@ -30,7 +30,7 @@ public abstract class CaseWriter extends MatchCaseWriter
 		}
 		else
 		{
-			Value controlValue = node().getParentSwitch().getControlValue();
+			Value controlValue = node().getParentMatch().getControlValue();
 			
 			String control = getWriter(controlValue).writeExpression().toString();
 			
@@ -46,7 +46,7 @@ public abstract class CaseWriter extends MatchCaseWriter
 			{
 				if (before.containsFallthrough())
 				{
-					Variable fallthrough = node().getParentSwitch().getLocalFallthrough();
+					Variable fallthrough = node().getParentMatch().getLocalFallthrough();
 					
 					fall = getWriter(fallthrough).writeExpression() + " || ";
 				}
@@ -62,7 +62,7 @@ public abstract class CaseWriter extends MatchCaseWriter
 			
 			getWriter(scope).write(builder, false);
 			
-			if (node().getParentSwitch().requiresLoopFacade() && node().requiresBreak())
+			if (node().getParentMatch().requiresLoopFacade() && node().requiresBreak())
 			{
 				builder.append("break;\n");
 			}
