@@ -91,7 +91,25 @@ public abstract class ProgramWriter extends TypeListWriter
 			getWriter(child).writeStaticBlockCalls(builder);
 		}
 
-		getWriter(method.getDeclaringClass()).writeName(builder).append('.').append(getWriter(method).writeName()).append("();\n");
+		Value emptyArgsArray = Instantiation.decodeStatement(method, "new Array<String>()", Location.INVALID, true);
+		Accessible argvArray = SyntaxTree.decodeIdentifierAccess(method, "System.jsStringArrayToNovaArray(null)", Location.INVALID, true);
+
+		MethodCall jsStringArrayToNovaArrayCall = (MethodCall)argvArray.getAccessedNode();
+
+		Value nullArg = jsStringArrayToNovaArrayCall.getArgumentList().getArgumentsInOrder()[0];
+		Literal processArgv = new Literal(nullArg.getParent(), Location.INVALID);
+		processArgv.value = "process.argv";
+
+		nullArg.replaceWith(processArgv);
+
+		builder.append("\n");
+		builder.append("var nova_main_args = process && process.argv ?\n");
+		getWriter(argvArray.toValue()).writeExpression(builder);
+		builder.append(" :\n");
+		getWriter(emptyArgsArray).writeExpression(builder);
+		builder.append(";\n\n");
+
+		getWriter(method.getDeclaringClass()).writeName(builder).append('.').append(getWriter(method).writeName()).append("(nova_main_args);\n");
 
 		if (localScope)
 		{
