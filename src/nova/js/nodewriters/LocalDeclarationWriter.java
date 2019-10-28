@@ -13,6 +13,6 @@ public abstract class LocalDeclarationWriter extends VariableDeclarationWriter
 		
 		writeName(builder);
 		
-		return builder.append(";\n");
+		return builder.append(" = null;\n");
 	}
 }
