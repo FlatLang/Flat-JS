@@ -14,7 +14,11 @@ public abstract class MethodCallWriter extends VariableWriter
 
 		if (callable instanceof InitializationMethod)
 		{
-			builder.append("__value = ");
+			if (node().getParentMethod() instanceof InitializationMethod) {
+				builder.append("self = ");
+			} else {
+				builder.append("__value = ");
+			}
 		}
 
 		writeUsePrefix(builder);
