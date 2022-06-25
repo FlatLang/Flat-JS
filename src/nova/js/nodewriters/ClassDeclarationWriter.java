@@ -3,6 +3,7 @@ package nova.js.nodewriters;
 import net.fathomsoft.nova.tree.*;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 {
@@ -51,16 +52,18 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 		}
 		
 		node().getInterfacesImplementationList().forEachVisibleListChild(i -> {
-			Arrays.stream(i.getTypeClass().getMethods()).forEach(method -> {
-				if (Arrays.stream(method.getOverridingMethods()).noneMatch(m -> m.getDeclaringClass() == node())) {
-					getWriter(method).writePrototypeAssignment(builder, node());
+			Arrays.stream(i.getTypeClass().getMethods()).forEach(interfaceMethod -> {
+				if (Arrays.stream(interfaceMethod.getOverridingMethods()).noneMatch(m -> m.getDeclaringClass() == node())) {
+					getWriter(interfaceMethod).writePrototypeAssignment(builder, node(), true);
+					if (Arrays.stream(node().getMethodList().getMethods()).noneMatch(a -> Objects.equals(interfaceMethod.getName(), a.getName()))) {
+						getWriter(interfaceMethod).writePrototypeAssignment(builder, node(), false);
+					}
 				}
 			});
 		});
-		
+
 		return builder;
 	}
-	
 	public StringBuilder writeStaticBlocks(final StringBuilder builder)
 	{
 		if (node().getStaticBlockList().getNumVisibleChildren() > 0)
