@@ -12,6 +12,11 @@ public abstract class MethodCallWriter extends VariableWriter
 	{
 		CallableMethod callable = node().getCallableDeclaration();
 
+		if (callable instanceof InitializationMethod)
+		{
+			builder.append("__value = ");
+		}
+
 		writeUsePrefix(builder);
 
 		if (callable instanceof MethodDeclaration)

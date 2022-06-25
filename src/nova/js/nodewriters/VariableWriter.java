@@ -27,7 +27,6 @@ public abstract class VariableWriter extends IdentifierWriter
 				}
 				else if (declaration instanceof InitializationMethod)
 				{
-					builder.append("return ");
 					getWriter(declaration.getDeclaringClass()).writeName(builder).append('.');
 				}
 				// field access
