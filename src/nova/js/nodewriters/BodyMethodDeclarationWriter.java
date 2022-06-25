@@ -3,43 +3,69 @@ package nova.js.nodewriters;
 import net.fathomsoft.nova.tree.*;
 import net.fathomsoft.nova.tree.lambda.LambdaMethodDeclaration;
 
+import java.util.Arrays;
+
 public abstract class BodyMethodDeclarationWriter extends NovaMethodDeclarationWriter
 {
 	public abstract BodyMethodDeclaration node();
-	
+
 	@Override
 	public StringBuilder write(StringBuilder builder)
 	{
-		writeAssignedVariable(builder).append(" = function ");
-		
+		// FIXME: This should be handled better. Static and non-static mixed overloads should be able to coexist easier
+		if (node().isStatic()) {
+			boolean nonStaticOverloadExists = Arrays.stream(node().getDeclaringClass().getMethodList().getMethods())
+                    .filter(m -> m != node())
+                    .filter(m -> m.getName().equals(node().getName()))
+                    .anyMatch(m -> !m.isStatic());
+
+            if (nonStaticOverloadExists) {
+                writeAssignedVariable(builder).append(" = function ");
+
+                getWriter(node().getParameterList()).write(builder).append(" ");
+
+                writeBody(builder);
+
+                return builder.append(";\n\n");
+            }
+		}
+
+		writeAssignedVariable(builder, true).append(" = function ");
+
 		getWriter(node().getParameterList()).write(builder).append(" ");
-		
+
 		writeBody(builder);
-		
+
+		if (node().isStatic()) {
+			builder.append(";\n\n");
+			writeAssignedVariable(builder).append(" = ");
+			writeAssignedVariable(builder, true);
+		}
+
 		return builder.append(";\n\n");
 	}
-	
+
 	public StringBuilder writeBody()
 	{
 		return writeBody(new StringBuilder());
 	}
-	
+
 	private static boolean isLambda(Node n)
 	{
 		return ((Closure)n).isLambda();
 	}
-	
+
 	public StringBuilder writeBody(StringBuilder builder)
 	{
 		builder.append("{\n");
-		
+
 		if (node() instanceof LambdaMethodDeclaration == false && node().whereChildOfType(Closure.class, BodyMethodDeclarationWriter::isLambda))
 		{
 			builder.append("var self = this;\n\n");
 		}
-		
+
 		getWriter(node().getScope()).write(builder, false);
-		
+
 		return builder.append('}');
 	}
 }

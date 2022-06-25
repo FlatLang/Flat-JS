@@ -43,7 +43,12 @@ public abstract class NovaMethodDeclarationWriter extends MethodDeclarationWrite
 	
 	public StringBuilder writeAssignedVariable(StringBuilder builder)
 	{
-		return getWriter(node().getParentClass()).writeName(builder).append(writePrototypeAccess()).append(".").append(writeName());
+		return writeAssignedVariable(builder, false);
+	}
+
+	public StringBuilder writeAssignedVariable(StringBuilder builder, boolean forcePrototype)
+	{
+		return getWriter(node().getParentClass()).writeName(builder).append(node().isStatic() && !forcePrototype ? "" : writePrototypeAccess()).append(".").append(writeName());
 	}
 	
 	public StringBuilder writeSuperName()
@@ -68,7 +73,7 @@ public abstract class NovaMethodDeclarationWriter extends MethodDeclarationWrite
 		
 	public StringBuilder writePrototypeAssignment(StringBuilder builder, ClassDeclaration clazz, boolean superCall)
 	{
-		return getWriter(clazz).writeName(builder).append(writePrototypeAccess()).append('.').append(superCall ? getWriter(node()).writeSuperName() : getWriter(node()).writeName()).append(" = ")
+		return getWriter(clazz).writeName(builder).append(node().isStatic() ? "" : writePrototypeAccess()).append('.').append(superCall ? getWriter(node()).writeSuperName() : getWriter(node()).writeName()).append(" = ")
 			.append(getWriter(node()).writeAssignedVariable()).append(";\n");
 	}
 	
@@ -79,6 +84,6 @@ public abstract class NovaMethodDeclarationWriter extends MethodDeclarationWrite
 	
 	public StringBuilder writePrototypeAccess(StringBuilder builder)
 	{
-		return builder.append(node().isStatic() ? "" : ".prototype");
+		return builder.append(".prototype");
 	}
 }

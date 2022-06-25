@@ -33,7 +33,24 @@ public abstract class ConstructorWriter extends BodyMethodDeclarationWriter
 		
 		return builder.append('}');
 	}
-	
+
+	@Override
+	public StringBuilder write(StringBuilder builder)
+	{
+		writeAssignedVariable(builder).append(" = function ");
+
+		getWriter(node().getParameterList()).write(builder).append(" ");
+
+		writeBody(builder);
+
+		return builder.append(";\n\n");
+	}
+
+	@Override
+	public StringBuilder writePrototypeAccess(StringBuilder builder) {
+		return builder;
+	}
+
 	@Override
 	public StringBuilder writeAssignedVariable(StringBuilder builder)
 	{
