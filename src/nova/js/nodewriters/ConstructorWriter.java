@@ -30,6 +30,8 @@ public abstract class ConstructorWriter extends BodyMethodDeclarationWriter
 		getWriter(assignmentMethod).writeAssignedVariable(builder).append(".apply(__value, [].slice.call(arguments));\n");
 		
 		getWriter(node().getScope()).write(builder, false, true);
+
+		builder.append("return __value;\n");
 		
 		return builder.append('}');
 	}
