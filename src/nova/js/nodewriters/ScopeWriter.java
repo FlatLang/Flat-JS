@@ -48,7 +48,7 @@ public abstract class ScopeWriter extends NodeWriter
 		});
 
 		if (node().parent instanceof InitializationMethod) {
-			builder.append("return this;\n");
+			builder.append("return self;\n");
 		}
 		
 		if (braces)
