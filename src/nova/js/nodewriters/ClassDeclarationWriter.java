@@ -99,7 +99,7 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 		for (String c : new String[] { "nova/Object", "nova/String", "nova/io/Console", "nova/datastruct/list/Array",
 			"nova/time/Date", "nova/math/Math", "nova/datastruct/Node", "nova/primitive/number/Int", "nova/primitive/number/Double",
 			"nova/primitive/number/Byte", "nova/primitive/number/Short", "nova/primitive/number/Long", "nova/primitive/number/Float",
-			"nova/time/DateTime" })
+			"nova/time/DateTime", "nova/async/Promise" })
 		{
 			if (node().getClassLocation().equals(c))
 			{
