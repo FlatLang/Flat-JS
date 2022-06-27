@@ -114,9 +114,12 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 		}
 
 		List<ClassDeclaration> dupes = node().getProgram()
-				.filterVisibleListChildren(f -> f != node().getFileDeclaration() && f.getClassDeclaration(node().getName()) != null)
+				.getVisibleListChildren()
 				.stream()
-				.map(f -> f.getClassDeclaration(node().getName())).collect(Collectors.toList());
+				.filter(f -> f != node().getFileDeclaration())
+				.map(f -> f.getClassDeclaration(node().getName()))
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
 
 		if (dupes.size() > 0) {
 			return builder.append(node().getClassLocation().replaceAll("[^\\w\\d_]", "_"));
