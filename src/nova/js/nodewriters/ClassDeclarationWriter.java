@@ -2,8 +2,11 @@ package nova.js.nodewriters;
 
 import net.fathomsoft.nova.tree.*;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 {
@@ -109,7 +112,16 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 				return builder.append("Nova").append(node().getName());
 			}
 		}
-		
+
+		List<ClassDeclaration> dupes = node().getProgram()
+				.filterVisibleListChildren(f -> f != node().getFileDeclaration() && f.getClassDeclaration(node().getName()) != null)
+				.stream()
+				.map(f -> f.getClassDeclaration(node().getName())).collect(Collectors.toList());
+
+		if (dupes.size() > 0) {
+			return builder.append(node().getClassLocation().replaceAll("[^\\w\\d_]", "_"));
+		}
+
 		return super.writeName(builder);
 	}
 }
