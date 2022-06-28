@@ -37,4 +37,17 @@ public abstract class StaticClassReferenceWriter extends IIdentifierWriter
 	public void writeNullFallbackPostfix(StringBuilder builder) {
 
 	}
+
+	@Override
+	public boolean shouldFallbackToNull() {
+		if (node().doesAccess()) {
+			Writer writer = getWriter(node().getReturnedNode());
+
+			if (writer instanceof AccessibleWriter) {
+				return ((AccessibleWriter) writer).shouldFallbackToNull();
+			}
+		}
+
+		return false;
+	}
 }
