@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
@@ -40,8 +41,31 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 		getWriter(node().getPropertyMethodList()).write(builder);
 		getWriter(node().getHiddenMethodList()).write(builder);
 		getWriter(node().getConstructorList()).write(builder);
-		
+
+		if (node().encapsulatingClass != null) {
+			ClassDeclarationWriter encapsulatingWriter = getWriter(node().encapsulatingClass);
+			writeUseExpression(builder).append(" = ");
+			encapsulatingWriter.writeName(builder).append(";\n\n");
+		}
+
 		return builder;
+	}
+
+	public StringBuilder writeUseExpression(StringBuilder builder) {
+		ClassDeclaration encapsulating = node().encapsulatingClass;
+		Stack<ClassDeclaration> classes = new Stack<>();
+
+		while (encapsulating != null) {
+			classes.push(encapsulating);
+
+			encapsulating = encapsulating.encapsulatingClass;
+		}
+
+		while (!classes.isEmpty()) {
+			getWriter(classes.pop()).writeName(builder).append('.');
+		}
+
+		return writeName(builder);
 	}
 	
 	public StringBuilder writeExtensionPrototypeAssignments(StringBuilder builder) {

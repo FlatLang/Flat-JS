@@ -25,11 +25,13 @@ public interface AccessibleWriter
 		return writeAccessedExpression(builder, true);
 	}
 
-	static boolean shouldFallbackToNull(Accessible node) {
-		return node != null && !(node.getParent() instanceof Priority) && node instanceof Value &&
-				!node.isAccessed() &&
-				node.doesAccess() &&
-				!((Value)node).isPrimitive();
+	default boolean shouldFallbackToNull() {
+		return node() != null &&
+				!(node().getParent() instanceof Priority) &&
+				node() instanceof Value &&
+				!node().isAccessed() &&
+				node().doesAccess() &&
+				!node().toValue().isPrimitive();
 	}
 
 	default void writeNullFallbackPrefix(StringBuilder builder) {
@@ -37,7 +39,7 @@ public interface AccessibleWriter
 	}
 
 	default void writeNullFallbackPrefix(StringBuilder builder, int skipCount) {
-		if (shouldFallbackToNull(node())) {
+		if (shouldFallbackToNull()) {
 			StringBuilder buffer = new StringBuilder();
 
 			Accessible current = node().getAccessedNode();
@@ -56,11 +58,11 @@ public interface AccessibleWriter
 		if (node().doesAccess()) {
 			Accessible current = node();
 
-			while (current != null && !shouldFallbackToNull(current)) {
+			while (current != null && !getWriter(current).shouldFallbackToNull()) {
 				current = current.getAccessingNode(true);
 			}
 
-			if (shouldFallbackToNull(current)) {
+			if (current != null && getWriter(current).shouldFallbackToNull()) {
 				builder.append(" || nova_null)");
 			}
 		}
