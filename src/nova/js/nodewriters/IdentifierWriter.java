@@ -1,6 +1,7 @@
 package nova.js.nodewriters;
 
 import net.fathomsoft.nova.tree.*;
+import net.fathomsoft.nova.tree.annotations.AwaitAnnotation;
 
 public abstract class IdentifierWriter extends ValueWriter implements AccessibleWriter
 {
@@ -12,6 +13,10 @@ public abstract class IdentifierWriter extends ValueWriter implements Accessible
 		if (isInstanceClosure())
 		{
 			return writeInstanceClosure(builder);
+		}
+
+		if (node().containsAnnotationOfType(AwaitAnnotation.class)) {
+			builder.append("await ");
 		}
 
 		writeNullFallbackPrefix(builder);

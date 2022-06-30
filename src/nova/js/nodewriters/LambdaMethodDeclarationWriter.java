@@ -1,6 +1,7 @@
 package nova.js.nodewriters;
 
 import net.fathomsoft.nova.tree.ClassDeclaration;
+import net.fathomsoft.nova.tree.annotations.AsyncAnnotation;
 import net.fathomsoft.nova.tree.lambda.LambdaMethodDeclaration;
 
 public abstract class LambdaMethodDeclarationWriter extends BodyMethodDeclarationWriter
@@ -15,6 +16,10 @@ public abstract class LambdaMethodDeclarationWriter extends BodyMethodDeclaratio
 
 	@Override
 	public StringBuilder writeSignature(StringBuilder builder) {
+		if (node().containsAnnotationOfType(AsyncAnnotation.class)) {
+			builder.append("async ");
+		}
+
 		return builder.append(getWriter(node().getParameterList()).write()).append(" =>");
 	}
 
