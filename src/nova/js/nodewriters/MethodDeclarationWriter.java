@@ -1,6 +1,7 @@
 package nova.js.nodewriters;
 
 import net.fathomsoft.nova.tree.*;
+import net.fathomsoft.nova.tree.annotations.AsyncAnnotation;
 
 public abstract class MethodDeclarationWriter extends InstanceDeclarationWriter
 {
@@ -13,6 +14,10 @@ public abstract class MethodDeclarationWriter extends InstanceDeclarationWriter
 	
 	public StringBuilder writeSignature(StringBuilder builder)
 	{
+		if (node().containsAnnotationOfType(AsyncAnnotation.class)) {
+			builder.append("async ");
+		}
+
 		return builder.append("function ").append(getWriter(node().getParameterList()).write());
 	}
 }

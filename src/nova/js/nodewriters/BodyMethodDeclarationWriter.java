@@ -1,6 +1,7 @@
 package nova.js.nodewriters;
 
 import net.fathomsoft.nova.tree.*;
+import net.fathomsoft.nova.tree.annotations.AsyncAnnotation;
 import net.fathomsoft.nova.tree.lambda.LambdaMethodDeclaration;
 
 import java.util.Arrays;
@@ -30,7 +31,13 @@ public abstract class BodyMethodDeclarationWriter extends NovaMethodDeclarationW
             }
 		}
 
-		writeAssignedVariable(builder, true).append(" = function ");
+		writeAssignedVariable(builder, true).append(" = ");
+
+		if (node().containsAnnotationOfType(AsyncAnnotation.class)) {
+			builder.append("async ");
+		}
+
+		builder.append("function ");
 
 		getWriter(node().getParameterList()).write(builder).append(" ");
 
