@@ -10,14 +10,14 @@
         <src.dir>src</src.dir>
     </properties>
 
-    <groupId>net.fathomsoft</groupId>
-    <artifactId>nova-js</artifactId>
+    <groupId>org.flatlang</groupId>
+    <artifactId>flat-js</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
-            <groupId>net.fathomsoft</groupId>
-            <artifactId>nova</artifactId>
+            <groupId>org.flatlang</groupId>
+            <artifactId>flat</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
