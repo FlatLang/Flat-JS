@@ -43,9 +43,8 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 		getWriter(node().getConstructorList()).write(builder);
 
 		if (node().encapsulatingClass != null) {
-			ClassDeclarationWriter encapsulatingWriter = getWriter(node().encapsulatingClass);
 			writeUseExpression(builder).append(" = ");
-			encapsulatingWriter.writeName(builder).append(";\n\n");
+			writeName(builder).append(";\n\n");
 		}
 
 		return builder;
