@@ -42,6 +42,9 @@ public abstract class ScopeWriter extends NodeWriter
 		{
 			builder.append('{').append('\n');
 		}
+		if (node().getParent() instanceof ForEachLoop) {
+			getWriter(((ForEachLoop)node().getParent()).getVariable().getDeclaration()).write(builder);
+		}
 		
 		node().forEachChild(child -> {
 			getWriter(child).write(builder);
