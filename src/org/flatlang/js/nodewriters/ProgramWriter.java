@@ -108,6 +108,11 @@ public abstract class ProgramWriter extends TypeListWriter
 		getWriter(emptyArgsArray).writeExpression(builder);
 		builder.append(";\n\n");
 
+		builder
+			.append("process.on('unhandledRejection', (reason, promise) => {\n")
+			.append(  "process.exit(1);\n")
+			.append("});\n\n");
+
 		getWriter(method.getDeclaringClass()).writeName(builder).append('.').append(getWriter(method).writeName()).append("(flat_main_args);\n");
 
 		if (localScope)
