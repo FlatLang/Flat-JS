@@ -13,9 +13,8 @@ public abstract class ConstructorWriter extends BodyMethodDeclarationWriter
 		
 		ClassDeclaration extended = node().getDeclaringClass().getExtendedClassDeclaration();
 
-
 		builder.append("var __value = new ");
-		getWriter(node().getDeclaringClass()).writeName(builder).append("()\n");
+		getWriter(node().getDeclaringClass()).writeName(builder).append("();\n");
 
 		if (extended != null)
 		{
