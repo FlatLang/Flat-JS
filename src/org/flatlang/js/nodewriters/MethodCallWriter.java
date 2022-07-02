@@ -23,8 +23,20 @@ public abstract class MethodCallWriter extends VariableWriter
 
 		writeUsePrefix(builder);
 
-		if (node().isChainNavigation()) {
+		if (callable instanceof ExtensionMethodDeclaration) {
+			ExtensionMethodDeclaration method = (ExtensionMethodDeclaration)callable;
+			builder.append("__callExtension");
 
+			if (node().isChainNavigation()) {
+				builder.append("Chain");
+			}
+			if (((Node)callable).containsAnnotationOfType(AsyncAnnotation.class)) {
+				builder.append("Async");
+			}
+
+			builder.append("(").append(getWriter(method).writeAssignedVariable()).append(", [");
+			getWriter(node().getArgumentList()).write(builder, false).append("])");
+		} else if (node().isChainNavigation()) {
 			builder.append("__chain");
 
 			if (((Node)callable).containsAnnotationOfType(AsyncAnnotation.class)) {

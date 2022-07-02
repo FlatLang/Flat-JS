@@ -48,7 +48,13 @@ public abstract class FlatMethodDeclarationWriter extends MethodDeclarationWrite
 
 	public StringBuilder writeAssignedVariable(StringBuilder builder, boolean forcePrototype)
 	{
-		return getWriter(node().getParentClass()).writeName(builder).append(node().isStatic() && !forcePrototype ? "" : writePrototypeAccess()).append(".").append(writeName());
+		getWriter(node().getParentClass()).writeName(builder);
+
+		if (forcePrototype || !node().isStatic()) {
+			writePrototypeAccess(builder);
+		}
+
+		return builder.append(".").append(writeName());
 	}
 	
 	public StringBuilder writeSuperName()
