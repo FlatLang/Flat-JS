@@ -18,7 +18,9 @@ public abstract class ConstructorWriter extends BodyMethodDeclarationWriter
 
 		if (extended != null)
 		{
-			getWriter(extended).writeName(builder).append(".call(__value);\n");
+			getWriter(extended.getAssignmentMethodNode())
+				.writeAssignedVariable(builder)
+				.append(".apply(__value, [].slice.call(arguments));\n");
 		}
 
 //		builder.append("this.__proto__ = ").append(getWriter(node().getDeclaringClass()).writeName()).append(".prototype;\n\n");
