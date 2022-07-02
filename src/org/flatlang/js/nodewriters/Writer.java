@@ -936,6 +936,17 @@ public class Writer
 				}
 			};
 		}
+		else if (node instanceof ExtensionMethodDeclaration)
+		{
+			return new ExtensionMethodDeclarationWriter()
+			{
+				@Override
+				public ExtensionMethodDeclaration node()
+				{
+					return (ExtensionMethodDeclaration)node;
+				}
+			};
+		}
 		else if (node instanceof BodyMethodDeclaration)
 		{
 			return new BodyMethodDeclarationWriter()
