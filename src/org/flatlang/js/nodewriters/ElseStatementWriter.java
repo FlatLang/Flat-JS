@@ -18,6 +18,8 @@ public abstract class ElseStatementWriter extends ControlStatementWriter
 			if (child instanceof IfStatement)
 			{
 				getWriter(child).writeExpression(builder).append(' ');
+
+				return getWriter(child.getScope()).write(builder);
 			}
 		}
 		
