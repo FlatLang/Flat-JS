@@ -30,10 +30,10 @@ public abstract class CaseWriter extends MatchCaseWriter
 		}
 		else
 		{
-			Value controlValue = node().getParentMatch().getControlValue();
-			
-			String control = getWriter(controlValue).writeExpression().toString();
-			
+			Value conditionValue = node().getCondition();
+
+			String condition = getWriter(conditionValue).writeExpression().toString();
+
 			Case before = null;
 			String fall   = "";
 			
@@ -56,9 +56,7 @@ public abstract class CaseWriter extends MatchCaseWriter
 				}
 			}
 			
-			Value value = node().getValue();
-			
-			builder.append("if (").append(fall).append(control).append(" == ").append(getWriter(value).writeExpression()).append(") {\n");
+			builder.append("if (").append(fall).append(condition).append(") {\n");
 			
 			getWriter(scope).write(builder, false);
 			
