@@ -1,5 +1,6 @@
 package org.flatlang.js.nodewriters;
 
+import org.flatlang.error.SyntaxMessage;
 import org.flatlang.tree.*;
 import org.flatlang.util.Location;
 import org.flatlang.js.engines.JSCompileEngine;
@@ -80,6 +81,12 @@ public abstract class ProgramWriter extends TypeListWriter
 		}
 
 		FlatMethodDeclaration method = node().getTree().getMainMethod(node().getController().codeGeneratorEngine.mainClass);
+
+		if (method == null) {
+			SyntaxMessage.error("Could not find main function", node().getController());
+
+			return builder;
+		}
 
 		Value flatNullString = Instantiation.decodeStatement(method, "new Null()", Location.INVALID, true);
 
