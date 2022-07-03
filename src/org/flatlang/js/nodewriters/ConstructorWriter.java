@@ -1,6 +1,8 @@
 package org.flatlang.js.nodewriters;
 
-import org.flatlang.tree.*;
+import org.flatlang.tree.AssignmentMethod;
+import org.flatlang.tree.ClassDeclaration;
+import org.flatlang.tree.Constructor;
 
 public abstract class ConstructorWriter extends BodyMethodDeclarationWriter
 {
@@ -66,7 +68,15 @@ public abstract class ConstructorWriter extends BodyMethodDeclarationWriter
 	
 	public StringBuilder writeConstructorListName(StringBuilder builder)
 	{
-		return builder.append("new").append(super.writeName(new StringBuilder()));
+		java.util.List<ClassDeclaration> dupes = getWriter(node().getParentClass()).getClassesWithSameName();
+
+		builder.append("new");
+
+		if (dupes.size() > 0) {
+			return builder.append(node().getParentClass().getClassLocation().replaceAll("[^\\w\\d_]", "_"));
+		} else {
+			return super.writeName(builder);
+		}
 	}
 	
 	@Override
