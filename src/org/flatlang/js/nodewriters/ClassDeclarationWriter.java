@@ -120,6 +120,16 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 
 		return builder;
 	}
+
+	public List<ClassDeclaration> getClassesWithSameName() {
+		return node().getProgram()
+			.getVisibleListChildren()
+			.stream()
+			.filter(f -> f != node().getFileDeclaration())
+			.map(f -> f.getClassDeclaration(node().getName()))
+			.filter(Objects::nonNull)
+			.collect(Collectors.toList());
+	}
 	
 	@Override
 	public StringBuilder writeName(StringBuilder builder)
@@ -135,13 +145,7 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 			}
 		}
 
-		List<ClassDeclaration> dupes = node().getProgram()
-				.getVisibleListChildren()
-				.stream()
-				.filter(f -> f != node().getFileDeclaration())
-				.map(f -> f.getClassDeclaration(node().getName()))
-				.filter(Objects::nonNull)
-				.collect(Collectors.toList());
+		List<ClassDeclaration> dupes = getClassesWithSameName();
 
 		if (dupes.size() > 0) {
 			return builder.append(node().getClassLocation().replaceAll("[^\\w\\d_]", "_"));
