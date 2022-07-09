@@ -75,6 +75,15 @@ public abstract class MethodCallWriter extends VariableWriter
 	}
 
 	@Override
+	public StringBuilder writeUsePrefix(StringBuilder builder) {
+		if (node().getFlatMethod() != null && node().getFlatMethod().isExtension() && !node().getFlatMethod().isUserMade()) {
+			return getWriter(node().getFlatMethod().getParentClass()).writeName(builder).append('.');
+		}
+
+		return super.writeUsePrefix(builder);
+	}
+
+	@Override
 	public StringBuilder writeName(StringBuilder builder) {
 		CallableMethod callable = node().getCallableDeclaration();
 
