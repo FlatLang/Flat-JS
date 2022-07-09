@@ -117,6 +117,7 @@ public abstract class ProgramWriter extends TypeListWriter
 
 		builder
 			.append("process.on('unhandledRejection', (reason, promise) => {\n")
+			.append(  "console.error(reason);\n")
 			.append(  "process.exit(1);\n")
 			.append("});\n\n");
 
