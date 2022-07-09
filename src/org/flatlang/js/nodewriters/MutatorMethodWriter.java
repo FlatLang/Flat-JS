@@ -13,4 +13,13 @@ public abstract class MutatorMethodWriter extends PropertyMethodWriter
 		
 		return super.writeName(builder);
 	}
+
+	@Override
+	public StringBuilder write(StringBuilder builder) {
+		if (node().isDisabled()) {
+			return builder;
+		}
+
+		return super.write(builder);
+	}
 }
