@@ -947,6 +947,17 @@ public class Writer
 				}
 			};
 		}
+		else if (node instanceof AnonymousCompilerMethod)
+		{
+			return new AnonymousCompilerMethodWriter()
+			{
+				@Override
+				public AnonymousCompilerMethod node()
+				{
+					return (AnonymousCompilerMethod)node;
+				}
+			};
+		}
 		else if (node instanceof BodyMethodDeclaration)
 		{
 			return new BodyMethodDeclarationWriter()
