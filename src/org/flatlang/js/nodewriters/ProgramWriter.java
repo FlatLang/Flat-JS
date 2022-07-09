@@ -104,7 +104,7 @@ public abstract class ProgramWriter extends TypeListWriter
 
 		Value nullArg = jsStringArrayToFlatArrayCall.getArgumentList().getArgumentsInOrder()[0];
 		Literal processArgv = new Literal(nullArg.getParent(), Location.INVALID);
-		processArgv.value = "process.argv";
+		processArgv.value = "process.argv.slice(1)";
 
 		nullArg.replaceWith(processArgv);
 
