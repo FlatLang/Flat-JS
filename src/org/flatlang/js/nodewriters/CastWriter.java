@@ -24,7 +24,7 @@ public abstract class CastWriter extends IValueWriter
 			{
 				after = ".charCodeAt(0)";
 			}
-			else if (value != charClass && value.implementsInterface(integerClass) && cast == charClass)
+			else if (value != null && value != charClass && value.implementsInterface(integerClass) && cast == charClass)
 			{
 				before = "String.fromCharCode(";
 				after = ")";
