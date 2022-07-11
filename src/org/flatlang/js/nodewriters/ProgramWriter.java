@@ -8,6 +8,9 @@ import org.flatlang.js.engines.JSCompileEngine;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
+
+import static org.flatlang.Flat.LIBRARY;
 
 public abstract class ProgramWriter extends TypeListWriter
 {
@@ -80,15 +83,16 @@ public abstract class ProgramWriter extends TypeListWriter
 			getWriter(child).writeStaticBlocks(builder);
 		}
 
-		FlatMethodDeclaration method = node().getTree().getMainMethod(node().getController().codeGeneratorEngine.mainClass);
+		Node parent = Arrays.stream(node().getChildrenOfType(FileDeclaration.class))
+			.map(f -> (FileDeclaration)f)
+			.map(FileDeclaration::getClassDeclaration)
+			.filter(Objects::nonNull)
+			.flatMap(c -> Arrays.stream(c.getMethods()))
+			.filter(Node::isUserMade)
+			.findFirst()
+			.get();
 
-		if (method == null) {
-			SyntaxMessage.error("Could not find main function", node().getController());
-
-			return builder;
-		}
-
-		Value flatNullString = Instantiation.decodeStatement(method, "new Null()", Location.INVALID, true);
+		Value flatNullString = Instantiation.decodeStatement(parent, "new Null()", Location.INVALID, true);
 
 		builder.append("flat_null = ").append(getWriter(flatNullString).writeUseExpression()).append(";\n\n");
 
@@ -97,31 +101,40 @@ public abstract class ProgramWriter extends TypeListWriter
 			getWriter(child).writeStaticBlockCalls(builder);
 		}
 
-		Value emptyArgsArray = Instantiation.decodeStatement(method, "new Array<String>()", Location.INVALID, true);
-		Accessible argvArray = SyntaxTree.decodeIdentifierAccess(method, "System.jsStringArrayToFlatArray(null)", Location.INVALID, true);
+		Value emptyArgsArray = Instantiation.decodeStatement(parent, "new Array<String>()", Location.INVALID, true);
+		Accessible argvArray = SyntaxTree.decodeIdentifierAccess(parent, "System.jsStringArrayToFlatArray(null)", Location.INVALID, true);
 
 		MethodCall jsStringArrayToFlatArrayCall = (MethodCall)argvArray.getAccessedNode();
 
-		Value nullArg = jsStringArrayToFlatArrayCall.getArgumentList().getArgumentsInOrder()[0];
-		Literal processArgv = new Literal(nullArg.getParent(), Location.INVALID);
-		processArgv.value = "process.argv.slice(1)";
+		if (!node().getController().isFlagEnabled(LIBRARY)) {Value nullArg = jsStringArrayToFlatArrayCall.getArgumentList().getArgumentsInOrder()[0];
+			Literal processArgv = new Literal(nullArg.getParent(), Location.INVALID);
+			processArgv.value = "process.argv.slice(1)";
 
-		nullArg.replaceWith(processArgv);
+			nullArg.replaceWith(processArgv);
 
-		builder.append("\n");
-		builder.append("var flat_main_args = process && process.argv ?\n");
-		getWriter(argvArray.toValue()).writeExpression(builder);
-		builder.append(" :\n");
-		getWriter(emptyArgsArray).writeExpression(builder);
-		builder.append(";\n\n");
+			builder.append("\n");
+			builder.append("var flat_main_args = process && process.argv ?\n");
+			getWriter(argvArray.toValue()).writeExpression(builder);
+			builder.append(" :\n");
+			getWriter(emptyArgsArray).writeExpression(builder);
+			builder.append(";\n\n");
 
-		builder
-			.append("process.on('unhandledRejection', (reason, promise) => {\n")
-			.append(  "console.error(reason);\n")
-			.append(  "process.exit(1);\n")
-			.append("});\n\n");
+			builder
+				.append("process.on('unhandledRejection', (reason, promise) => {\n")
+				.append(  "console.error(reason);\n")
+				.append(  "process.exit(1);\n")
+				.append("});\n\n");
 
-		getWriter(method.getDeclaringClass()).writeName(builder).append('.').append(getWriter(method).writeName()).append("(flat_main_args);\n");
+			FlatMethodDeclaration method = node().getTree().getMainMethod(node().getController().codeGeneratorEngine.mainClass);
+
+			if (method == null) {
+				SyntaxMessage.error("Could not find main function", node().getController());
+
+				return builder;
+			}
+
+			getWriter(method.getDeclaringClass()).writeName(builder).append('.').append(getWriter(method).writeName()).append("(flat_main_args);\n");
+		}
 
 		if (localScope)
 		{
