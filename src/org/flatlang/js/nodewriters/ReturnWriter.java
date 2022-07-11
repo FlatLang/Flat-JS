@@ -12,7 +12,7 @@ public abstract class ReturnWriter extends IValueWriter
 	{
 		Value value = node().getValueNode();
 		
-		if (!(value instanceof Throw)) {
+		if (value != null && value instanceof Throw == false) {
 			builder.append("return");
 		}
 		
@@ -28,6 +28,12 @@ public abstract class ReturnWriter extends IValueWriter
 			if (!(value instanceof Throw) && !value.getReturnedNode().isPrimitive()) {
 				builder.append(") || null");
 			}
+		} else if (node().getReturnValues().getNumVisibleChildren() > 0) {
+			Node n = node().getReturnValues().getVisibleChild(0);
+
+			getWriter(n).write(builder);
+		} else {
+			builder.append("return");
 		}
 		
 		return builder;
