@@ -43,6 +43,10 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
+                        <configuration>
+                            <finalName>flat-js</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
