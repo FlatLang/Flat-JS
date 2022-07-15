@@ -135,7 +135,7 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 	public StringBuilder writeName(StringBuilder builder)
 	{
 		for (String c : new String[] { "flatlang/Object", "flatlang/String", "flatlang/io/Console", "flatlang/datastruct/list/Array",
-			"flatlang/time/Date", "flatlang/math/Math", "flatlang/datastruct/Node", "flatlang/primitive/number/Int", "flatlang/primitive/number/Double",
+			"flatlang/time/Date", "flatlang/Math", "flatlang/datastruct/Node", "flatlang/primitive/number/Int", "flatlang/primitive/number/Double",
 			"flatlang/primitive/number/Byte", "flatlang/primitive/number/Short", "flatlang/primitive/number/Long", "flatlang/primitive/number/Float",
 			"flatlang/time/DateTime", "flatlang/async/Promise" })
 		{
