@@ -102,7 +102,7 @@ public abstract class ProgramWriter extends TypeListWriter
 		}
 
 		Value emptyArgsArray = Instantiation.decodeStatement(parent, "new Array<String>()", Location.INVALID, true);
-		Accessible argvArray = SyntaxTree.decodeIdentifierAccess(parent, "System.jsStringArrayToFlatArray(null)", Location.INVALID, true);
+		Accessible argvArray = SyntaxTree.decodeIdentifierAccess(parent, "Array.jsStringArrayToFlatArray(null)", Location.INVALID, true);
 
 		MethodCall jsStringArrayToFlatArrayCall = (MethodCall)argvArray.getAccessedNode();
 
