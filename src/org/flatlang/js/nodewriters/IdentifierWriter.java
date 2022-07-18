@@ -15,10 +15,8 @@ public abstract class IdentifierWriter extends ValueWriter implements Accessible
 			return writeInstanceClosure(builder);
 		}
 
-		if (!node().isAccessed() && node().isAwait()) {
-			builder.append("await ");
-		} else if (!node().isAccessed()) {
-			node().getAccessedNodes()
+		if (!node().isAccessed()) {
+			node().getAccessedNodes(true)
 				.stream()
 				.filter(n -> n.toValue().isAwait())
 				.forEach(n -> builder.append("(await "));
@@ -28,7 +26,7 @@ public abstract class IdentifierWriter extends ValueWriter implements Accessible
 
 		writeUseExpression(builder);
 
-		if (node().isAccessed() && node().isAwait()) {
+		if (node().isAwait()) {
 			builder.append(')');
 		}
 
