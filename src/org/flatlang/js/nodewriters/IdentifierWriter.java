@@ -15,13 +15,22 @@ public abstract class IdentifierWriter extends ValueWriter implements Accessible
 			return writeInstanceClosure(builder);
 		}
 
-		if (node().containsAnnotationOfType(AwaitAnnotation.class)) {
+		if (!node().isAccessed() && node().isAwait()) {
 			builder.append("await ");
+		} else if (!node().isAccessed()) {
+			node().getAccessedNodes()
+				.stream()
+				.filter(n -> n.toValue().isAwait())
+				.forEach(n -> builder.append("(await "));
 		}
 
 		writeNullFallbackPrefix(builder);
 
 		writeUseExpression(builder);
+
+		if (node().isAccessed() && node().isAwait()) {
+			builder.append(')');
+		}
 
 		writeNullFallbackPostfix(builder);
 
