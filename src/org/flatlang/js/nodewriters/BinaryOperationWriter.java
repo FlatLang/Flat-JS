@@ -10,9 +10,14 @@ public abstract class BinaryOperationWriter extends IValueWriter
 	public StringBuilder writeExpression(StringBuilder builder)
 	{
 		boolean requiresFloor = false;
-		
+
 		ClassDeclaration charClass = node().getProgram().getClassDeclaration("flatlang/primitive/number/Char");
-		
+
+		boolean numerical = node().getOperator().isNumerical();
+		boolean shorthand = node().getOperator().isShorthand();
+		boolean leftRequiresToCharCode = numerical && node().getLeftOperand().getReturnedNode().getTypeClass() == charClass;
+		boolean rightRequiresToCharCode = numerical && node().getRightOperand().getReturnedNode().getTypeClass() == charClass;
+
 		if (node().getOperator().getOperator().equals("/") || node().getOperator().getOperator().equals("%"))
 		{
 			ClassDeclaration integer = node().getProgram().getClassDeclaration("flatlang/primitive/number/Integer");
@@ -30,17 +35,23 @@ public abstract class BinaryOperationWriter extends IValueWriter
 		{
 			builder.append("~~(");
 		}
-		
+
+		if (shorthand && leftRequiresToCharCode)
+		{
+			builder.append("(");
+			getWriter(node().getLeftOperand()).writeExpression(builder).append(" = String.fromCharCode(");
+		}
+
 		getWriter(node().getLeftOperand()).writeExpression(builder);
-		
-		boolean numerical = node().getOperator().isNumerical();
-		
-		if (numerical && node().getLeftOperand().getReturnedNode().getTypeClass() == charClass)
+
+		if (leftRequiresToCharCode)
 		{
 			builder.append(".charCodeAt(0)");
 		}
 
-		if (node().getOperator().getOperator().equals(Operator.EQUALS)) {
+		if (shorthand && leftRequiresToCharCode) {
+			builder.append(' ').append(node().getOperator().getNonShorthand()).append(' ');
+		} else if (node().getOperator().getOperator().equals(Operator.EQUALS)) {
 			builder.append(' ').append("===").append(' ');
 		} else {
 			builder.append(' ').append(getWriter(node().getOperator()).write()).append(' ');
@@ -48,11 +59,16 @@ public abstract class BinaryOperationWriter extends IValueWriter
 		
 		builder.append(getWriter(node().getRightOperand()).writeExpression());
 		
-		if (numerical && node().getRightOperand().getReturnedNode().getTypeClass() == charClass)
+		if (rightRequiresToCharCode)
 		{
 			builder.append(".charCodeAt(0)");
 		}
-		
+
+		if (shorthand && leftRequiresToCharCode)
+		{
+			builder.append("))");
+		}
+
 		if (requiresFloor)
 		{
 			builder.append(')');

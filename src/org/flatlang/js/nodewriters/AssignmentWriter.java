@@ -9,29 +9,27 @@ public abstract class AssignmentWriter extends ValueWriter
 	@Override
 	public StringBuilder writeExpression(StringBuilder builder)
 	{
-		ClassDeclaration integerClass = node().getProgram().getClassDeclaration("flatlang/primitive/number/Integer");
-		ClassDeclaration charClass = node().getProgram().getClassDeclaration("flatlang/primitive/number/Char");
-		
 		ClassDeclaration set = node().getAssigneeNode().getReturnedNode().getTypeClass();
 		ClassDeclaration value = node().getAssignmentNode().getReturnedNode().getTypeClass();
-		
-		String before = "";
-		String after = "";
-		
+
 		if (!node().getAssignmentNode().getReturnedNode().isPrimitiveArray() && set != null && value != null)
 		{
+			ClassDeclaration integerClass = node().getProgram().getClassDeclaration("flatlang/primitive/number/Integer");
+			ClassDeclaration charClass = node().getProgram().getClassDeclaration("flatlang/primitive/number/Char");
+
 			if (set == charClass && value != charClass && value.implementsInterface(integerClass))
 			{
-				before = "String.fromCharCode(";
-				after = ")";
+				return getWriter(node().getAssigneeNode()).writeExpression(builder).append(" = ")
+					.append("String.fromCharCode(").append(getWriter(node().getAssignmentNode()).writeExpression()).append(')');
 			}
 			else if (set != charClass && set.implementsInterface(integerClass) && value == charClass)
 			{
-				after = ".charCodeAt(0)";
+				return getWriter(node().getAssigneeNode()).writeExpression(builder).append(" = ")
+					.append(getWriter(node().getAssignmentNode()).writeExpression()).append(".charCodeAt(0)");
 			}
 		}
 		
 		return getWriter(node().getAssigneeNode()).writeExpression(builder).append(" = ")
-			.append(before).append(getWriter(node().getAssignmentNode()).writeExpression()).append(after);
+			.append(getWriter(node().getAssignmentNode()).writeExpression());
 	}
 }
