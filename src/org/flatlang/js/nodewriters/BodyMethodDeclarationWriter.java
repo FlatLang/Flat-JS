@@ -21,7 +21,13 @@ public abstract class BodyMethodDeclarationWriter extends FlatMethodDeclarationW
                     .anyMatch(m -> !m.isStatic());
 
             if (nonStaticOverloadExists) {
-                writeAssignedVariable(builder).append(" = function ");
+                writeAssignedVariable(builder).append(" = ");
+
+				if (node().containsAnnotationOfType(AsyncAnnotation.class)) {
+					builder.append("async ");
+				}
+
+				builder.append("function ");
 
                 getWriter(node().getParameterList()).write(builder).append(" ");
 
