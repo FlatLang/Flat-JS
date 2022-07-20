@@ -1,5 +1,6 @@
 package org.flatlang.js.nodewriters;
 
+import org.flatlang.Flat;
 import org.flatlang.tree.*;
 import org.flatlang.tree.annotations.AsyncAnnotation;
 
@@ -76,7 +77,7 @@ public abstract class MethodCallWriter extends VariableWriter
 
 	@Override
 	public StringBuilder writeUsePrefix(StringBuilder builder) {
-		if (node().getFlatMethod() != null && node().getFlatMethod().isExtension() && !node().getFlatMethod().isUserMade()) {
+		if (node().getFlatMethod() != null && node().getFlatMethod().isExtension() && node().getFlatMethod() instanceof AnonymousCompilerMethod) {
 			return getWriter(node().getFlatMethod().getParentClass()).writeName(builder).append('.');
 		}
 
