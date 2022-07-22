@@ -113,17 +113,19 @@ public abstract class ProgramWriter extends TypeListWriter
 			nullArg.replaceWith(processArgv);
 
 			builder.append("\n");
-			builder.append("var flat_main_args = process && process.argv ?\n");
+			builder.append("var flat_main_args = typeof process !== 'undefined' && process.argv ?\n  ");
 			getWriter(argvArray.toValue()).writeExpression(builder);
-			builder.append(" :\n");
+			builder.append(" :\n  ");
 			getWriter(emptyArgsArray).writeExpression(builder);
 			builder.append(";\n\n");
 
 			builder
-				.append("process.on('unhandledRejection', (reason, promise) => {\n")
-				.append(  "console.error(reason);\n")
-				.append(  "process.exit(1);\n")
-				.append("});\n\n");
+				.append("if (typeof process !== 'undefined' && typeof process.on === 'function') {\n")
+				.append(  "process.on('unhandledRejection', (reason, promise) => {\n")
+				.append(    "console.error(reason);\n")
+				.append(    "process.exit(1);\n")
+				.append(  "});\n")
+				.append("}\n\n");
 
 			FlatMethodDeclaration method = node().getTree().getMainMethod(node().getController().codeGeneratorEngine.mainClass);
 
