@@ -10,9 +10,7 @@ public abstract class LocalDeclarationWriter extends VariableDeclarationWriter
 	public StringBuilder write(StringBuilder builder)
 	{
 		builder.append("var ");
-		
-		writeName(builder);
-		
-		return builder.append(" = null;\n");
+
+		return writeExpression(builder).append(";\n");
 	}
 }
