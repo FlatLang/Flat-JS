@@ -32,40 +32,6 @@ public interface AccessibleWriter
 				!node().toValue().isPrimitive();
 	}
 
-	default void writeNullFallbackPrefix(StringBuilder builder) {
-		writeNullFallbackPrefix(builder, 0);
-	}
-
-	default void writeNullFallbackPrefix(StringBuilder builder, int skipCount) {
-		if (shouldFallbackToNull()) {
-			StringBuilder buffer = new StringBuilder();
-
-			Accessible current = node().getAccessedNode();
-
-			while (current != null) {
-				buffer.append("(");
-
-				current = current.getAccessedNode();
-			}
-
-			builder.append(buffer.substring(skipCount));
-		}
-	}
-
-	default void writeNullFallbackPostfix(StringBuilder builder) {
-		if (node().doesAccess()) {
-			Accessible current = node();
-
-			while (current != null && !getWriter(current).shouldFallbackToNull()) {
-				current = current.getAccessingNode(true);
-			}
-
-			if (current != null && getWriter(current).shouldFallbackToNull()) {
-				builder.append(" || flat_null)");
-			}
-		}
-	}
-
 	default StringBuilder writeAccessedExpression(StringBuilder builder, boolean dot)
 	{
 		if (node().doesAccess())

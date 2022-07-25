@@ -70,8 +70,6 @@ public abstract class MethodCallWriter extends VariableWriter
 
 		writeArrayAccess(builder);
 
-//		writeNullFallbackPostfix(builder);
-
 		return builder;
 	}
 
@@ -96,13 +94,6 @@ public abstract class MethodCallWriter extends VariableWriter
 			}
 		} else {
 			return builder.append(node().getName());
-		}
-	}
-
-	@Override
-	public void writeNullFallbackPostfix(StringBuilder builder) {
-		if (!(node().getFlatMethod() instanceof Constructor)) {
-			super.writeNullFallbackPostfix(builder);
 		}
 	}
 }
