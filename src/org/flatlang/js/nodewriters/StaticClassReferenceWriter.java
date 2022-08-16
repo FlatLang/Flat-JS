@@ -20,9 +20,9 @@ public abstract class StaticClassReferenceWriter extends IIdentifierWriter
 			String classLocation = c.getClassLocation();
 			boolean isInterface = false;
 
-			Instantiation instantiation = Instantiation.decodeStatement(node().parent, "new String(\"" + classLocation + "\")", Location.INVALID, true);
+			Instantiation instantiation = Instantiation.decodeStatement(node().parent, "String(\"" + classLocation + "\")", Location.INVALID, true);
 
-			return builder.append("new flatConstructors.newClass(").append(getWriter(instantiation).writeExpression()).append(", ").append(isInterface).append(")");
+			return builder.append("flatConstructors.newClass(").append(getWriter(instantiation).writeExpression()).append(", ").append(isInterface).append(")");
 		} else {
 			return super.writeExpression(builder);
 		}

@@ -92,7 +92,7 @@ public abstract class ProgramWriter extends TypeListWriter
 			.findFirst()
 			.get();
 
-		Value flatNullString = Instantiation.decodeStatement(parent, "new Null()", Location.INVALID, true);
+		Value flatNullString = Instantiation.decodeStatement(parent, "Null()", Location.INVALID, true);
 
 		builder.append("flat_null = ").append(getWriter(flatNullString).writeUseExpression()).append(";\n\n");
 
@@ -101,7 +101,7 @@ public abstract class ProgramWriter extends TypeListWriter
 			getWriter(child).writeStaticBlockCalls(builder);
 		}
 
-		Value emptyArgsArray = Instantiation.decodeStatement(parent, "new Array<String>()", Location.INVALID, true);
+		Value emptyArgsArray = Instantiation.decodeStatement(parent, "Array<String>()", Location.INVALID, true);
 		Accessible argvArray = SyntaxTree.decodeIdentifierAccess(parent, "Array.jsStringArrayToFlatArray(null)", Location.INVALID, true);
 
 		MethodCall jsStringArrayToFlatArrayCall = (MethodCall)argvArray.getAccessedNode();
