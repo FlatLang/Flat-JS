@@ -69,6 +69,27 @@ public abstract class ProgramWriter extends TypeListWriter
 			printClass(builder, printedClasses, child);
 		}
 
+		Node parent = Arrays.stream(node().getChildrenOfType(FileDeclaration.class))
+			.map(f -> (FileDeclaration)f)
+			.map(FileDeclaration::getClassDeclaration)
+			.filter(Objects::nonNull)
+			.flatMap(c -> Arrays.stream(c.getMethods()))
+			.filter(Node::isUserMade)
+			.findFirst()
+			.get();
+
+		Value flatNullString = Instantiation.decodeStatement(parent, "Null()", Location.INVALID, true);
+
+		builder.append("flat_null = ").append(getWriter(flatNullString).writeUseExpression()).append(";\n\n");
+
+		for (ClassDeclaration child : classes)
+		{
+			getWriter(child).writeStaticLazyDeclarations(builder);
+		}
+
+		builder.append("\n");
+
+
 		HashSet<String> printedPrototypes = new HashSet<>();
 
 		node().forEachVisibleListChild(file -> {
@@ -82,19 +103,6 @@ public abstract class ProgramWriter extends TypeListWriter
 		{
 			getWriter(child).writeStaticBlocks(builder);
 		}
-
-		Node parent = Arrays.stream(node().getChildrenOfType(FileDeclaration.class))
-			.map(f -> (FileDeclaration)f)
-			.map(FileDeclaration::getClassDeclaration)
-			.filter(Objects::nonNull)
-			.flatMap(c -> Arrays.stream(c.getMethods()))
-			.filter(Node::isUserMade)
-			.findFirst()
-			.get();
-
-		Value flatNullString = Instantiation.decodeStatement(parent, "Null()", Location.INVALID, true);
-
-		builder.append("flat_null = ").append(getWriter(flatNullString).writeUseExpression()).append(";\n\n");
 
 		for (ClassDeclaration child : classes)
 		{

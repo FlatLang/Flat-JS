@@ -153,4 +153,18 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 
 		return super.writeName(builder);
 	}
+
+	public void writeStaticLazyDeclarations(StringBuilder builder) {
+		node().getPropertyMethodList().forEach(methodDeclaration -> {
+			if (methodDeclaration instanceof AccessorMethod == false) {
+				return;
+			}
+
+			AccessorMethod method = (AccessorMethod)methodDeclaration;
+
+			if (method.getLazy() && method.isStatic()) {
+				getWriter(method).writeLazyAccess(builder).append(" = undefined;\n");
+			}
+		});
+	}
 }
