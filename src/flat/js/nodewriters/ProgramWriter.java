@@ -158,15 +158,20 @@ public abstract class ProgramWriter extends TypeListWriter
 		if (!printedClasses.contains(c.getClassLocation())) {
 			printedClasses.add(c.getClassLocation());
 
+			StringBuilder prototypes = new StringBuilder();
+
 			ClassDeclaration extension = c.getExtendedClassDeclaration();
 
 			if (extension != null) {
-				printPrototypes(builder, printedClasses, extension);
+				printPrototypes(prototypes, printedClasses, extension);
 			}
 
-			getWriter(c).writeExtensionPrototypeAssignments(builder);
+			getWriter(c).writeExtensionPrototypeAssignments(prototypes);
 
-			builder.append("\n\n");
+			if (prototypes.toString().trim().length() > 0) {
+				builder.append(prototypes);
+				builder.append("\n\n");
+			}
 		}
 	}
 
