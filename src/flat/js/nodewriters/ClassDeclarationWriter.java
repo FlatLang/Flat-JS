@@ -41,7 +41,7 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 		getWriter(node().getHiddenMethodList()).write(builder);
 		getWriter(node().getConstructorList()).write(builder);
 
-		if (node().encapsulatingClass != null) {
+		if (node().encapsulatingClass != null || !node().getFileDeclaration().getName().equals(node().getName())) {
 			writeUseExpression(builder).append(" = ");
 			writeName(builder).append(";\n\n");
 		}
@@ -52,6 +52,10 @@ public abstract class ClassDeclarationWriter extends InstanceDeclarationWriter
 	public StringBuilder writeUseExpression(StringBuilder builder) {
 		ClassDeclaration encapsulating = node().encapsulatingClass;
 		Stack<ClassDeclaration> classes = new Stack<>();
+
+		if (encapsulating == null && !node().getFileDeclaration().getName().equals(node().getName())) {
+			classes.push(node().getFileDeclaration().getClassDeclaration());
+		}
 
 		while (encapsulating != null) {
 			classes.push(encapsulating);
