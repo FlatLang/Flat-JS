@@ -3,6 +3,10 @@ package flat.js.nodewriters;
 import flat.tree.AssignmentMethod;
 import flat.tree.ClassDeclaration;
 import flat.tree.Constructor;
+import flat.tree.generics.GenericTypeParameter;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class ConstructorWriter extends BodyMethodDeclarationWriter
 {
@@ -17,6 +21,10 @@ public abstract class ConstructorWriter extends BodyMethodDeclarationWriter
 
 		builder.append("var __value = new ");
 		getWriter(node().getDeclaringClass()).writeName(builder).append("();\n");
+
+		java.util.List<GenericTypeParameter> params = getReifiedParameters();
+
+		params.forEach(p -> builder.append("__value.").append(p.getName()).append(" = ").append(p.getName()).append("_value;\n"));
 
 		if (extended != null)
 		{
@@ -43,7 +51,23 @@ public abstract class ConstructorWriter extends BodyMethodDeclarationWriter
 	{
 		writeAssignedVariable(builder).append(" = function ");
 
-		getWriter(node().getParameterList()).write(builder).append(" ");
+		builder.append("(");
+		getWriter(node().getParameterList()).write(builder, false);
+
+		java.util.List<GenericTypeParameter> params = getReifiedParameters();
+
+		if (params.size() > 0) {
+			if (node().getParameterList().getNumVisibleChildren() > 0) {
+				builder.append(", ");
+			}
+
+			builder.append(params.stream()
+				.map(p -> p.getName()  + "_value")
+				.collect(Collectors.joining(", ")));
+		}
+
+		builder.append(") ");
+
 
 		writeBody(builder);
 
@@ -83,5 +107,9 @@ public abstract class ConstructorWriter extends BodyMethodDeclarationWriter
 	public StringBuilder writeName(StringBuilder builder)
 	{
 		return builder.append("flatConstructors.").append(writeConstructorListName());
+	}
+
+	private List<GenericTypeParameter> getReifiedParameters() {
+		return node().getDeclaringClass().getReifiedParameters();
 	}
 }
