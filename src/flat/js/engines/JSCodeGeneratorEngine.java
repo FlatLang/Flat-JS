@@ -53,7 +53,7 @@ public class JSCodeGeneratorEngine extends CodeGeneratorEngine
 				String filename = FileUtils.removeFileExtension(controller.outputFile.getName()) + ".js";
 				File file = new File(controller.outputFile.getParent() + "/" + filename);
 				controller.outputFile.getParentFile().mkdirs();
-				controller.log("Writing to file " + file.getCanonicalPath());
+				controller.log("Writing to file " + file.getCanonicalPath(), true);
 				writeFile(filename, controller.outputFile.getParentFile(), formatText(Writer.getWriter(tree.getRoot()).write().toString()));
 			}
 			catch (IOException e)
