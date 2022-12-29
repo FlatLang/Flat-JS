@@ -1,6 +1,7 @@
 package flat.js.nodewriters;
 
 import flat.tree.*;
+import flat.tree.annotations.LazyAnnotation;
 
 public abstract class MethodCallArgumentListWriter extends ArgumentListWriter
 {
@@ -25,6 +26,16 @@ public abstract class MethodCallArgumentListWriter extends ArgumentListWriter
 			if (i > 0)
 			{
 				builder.append(", ");
+			}
+
+			boolean lazyParameter = method.getParameterList().getParameter(i).containsAnnotationOfType(LazyAnnotation.class);
+
+			if (lazyParameter) {
+				if (node().getParentMethod().isAsync()) {
+					builder.append("async ");
+				}
+
+				builder.append("() => ");
 			}
 
 			getWriter(values[i]).writeExpression(builder);
