@@ -72,7 +72,7 @@ public abstract class BodyMethodDeclarationWriter extends FlatMethodDeclarationW
 	{
 		builder.append("{\n");
 
-		if (node() instanceof InitializationMethod || node() instanceof LambdaMethodDeclaration == false && node().whereChildOfType(Closure.class, BodyMethodDeclarationWriter::isLambda))
+		if (node() instanceof InitializationMethod || node() instanceof LambdaMethodDeclaration || node() instanceof LambdaMethodDeclaration == false && node().whereChildOfType(Closure.class, BodyMethodDeclarationWriter::isLambda))
 		{
 			builder.append("var self = this;\n\n");
 		}
