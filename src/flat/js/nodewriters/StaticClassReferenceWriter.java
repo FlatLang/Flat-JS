@@ -3,6 +3,8 @@ package flat.js.nodewriters;
 import flat.tree.*;
 import flat.util.Location;
 
+import java.util.Optional;
+
 public abstract class StaticClassReferenceWriter extends IIdentifierWriter
 {
 	public abstract StaticClassReference node();
@@ -15,6 +17,12 @@ public abstract class StaticClassReferenceWriter extends IIdentifierWriter
 
 	@Override
 	public StringBuilder writeExpression(StringBuilder builder) {
+		Optional<Accessible> instantiationCall = node().getAccessedNodes().stream().filter(n -> n instanceof Instantiation).findFirst();
+
+		if (instantiationCall.isPresent()) {
+			return getWriter(instantiationCall.get().toValue()).writeExpression(builder);
+		}
+
 		if (node().isMetaClass()) {
 			ClassDeclaration c = node().getFileDeclaration().getImportedClass(node(), node().getName());
 			String classLocation = c.getClassLocation();
