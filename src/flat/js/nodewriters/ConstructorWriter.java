@@ -26,12 +26,7 @@ public abstract class ConstructorWriter extends BodyMethodDeclarationWriter
 
 		params.forEach(p -> builder.append("__value.").append(p.getName()).append(" = ").append(p.getName()).append("_value;\n"));
 
-		if (extended != null)
-		{
-			getWriter(extended.getAssignmentMethodNode())
-				.writeAssignedVariable(builder)
-				.append(".apply(__value, [].slice.call(arguments));\n");
-		}
+		writeExtensionAssignmentMethodCalls(builder, extended);
 
 //		builder.append("this.__proto__ = ").append(getWriter(node().getDeclaringClass()).writeName()).append(".prototype;\n\n");
 
@@ -44,6 +39,20 @@ public abstract class ConstructorWriter extends BodyMethodDeclarationWriter
 		builder.append("return __value;\n");
 
 		return builder.append('}');
+	}
+
+	private static void writeExtensionAssignmentMethodCalls(StringBuilder builder, ClassDeclaration extended) {
+		if (extended != null) {
+			ClassDeclaration superExtended = extended.getExtendedClassDeclaration();
+
+			if (superExtended != null) {
+				writeExtensionAssignmentMethodCalls(builder, superExtended);
+			}
+
+			getWriter(extended.getAssignmentMethodNode())
+				.writeAssignedVariable(builder)
+				.append(".apply(__value, [].slice.call(arguments));\n");
+		}
 	}
 
 	@Override
