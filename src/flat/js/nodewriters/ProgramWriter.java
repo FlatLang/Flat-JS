@@ -125,10 +125,12 @@ public abstract class ProgramWriter extends TypeListWriter
 			getWriter(child).writeStaticBlocks(builder);
 		}
 
+        builder.append("async function __callStaticBlocks() {\n");
 		for (ClassDeclaration child : classes)
 		{
 			getWriter(child).writeStaticBlockCalls(builder);
 		}
+        builder.append("}\n");
 
 		Value emptyArgsArray = Instantiation.decodeStatement(parent, "Array<String>()", Location.INVALID, true);
 		Accessible argvArray = SyntaxTree.decodeIdentifierAccess(parent, "Array.jsStringArrayToFlatArray(null)", Location.INVALID, true);
@@ -164,7 +166,12 @@ public abstract class ProgramWriter extends TypeListWriter
 				return builder;
 			}
 
+            builder.append("(async () => {\n");
+            builder.append("await __callStaticBlocks();\n");
+
 			getWriter(method.getDeclaringClass()).writeName(builder).append('.').append(getWriter(method).writeName()).append("(flat_main_args);\n");
+
+            builder.append("})();\n");
 		}
 
 		if (localScope)
