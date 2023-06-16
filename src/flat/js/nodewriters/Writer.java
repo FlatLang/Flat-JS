@@ -2,7 +2,7 @@ package flat.js.nodewriters;
 
 import flat.tree.*;
 import flat.tree.Package;
-import flat.tree.annotations.Annotation;
+import flat.tree.annotations.*;
 import flat.tree.exceptionhandling.*;
 import flat.tree.generics.GenericTypeParameter;
 import flat.tree.lambda.LambdaMethodDeclaration;
@@ -13,6 +13,17 @@ public class Writer
 {
 	public static NodeWriter getWriter(final Node node)
 	{
+		if (node instanceof CommentAnnotation)
+		{
+			return new CommentAnnotationWriter()
+			{
+				@Override
+				public CommentAnnotation node()
+				{
+					return (CommentAnnotation)node;
+				}
+			};
+		}
 		if (node instanceof Annotation)
 		{
 			return new AnnotationWriter()
