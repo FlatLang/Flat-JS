@@ -172,7 +172,9 @@ public abstract class ProgramWriter extends TypeListWriter
 			getWriter(method.getDeclaringClass()).writeName(builder).append('.').append(getWriter(method).writeName()).append("(flat_main_args);\n");
 
             builder.append("})();\n");
-		}
+		} else {
+            builder.append("await __callStaticBlocks();\n");
+        }
 
 		if (localScope)
 		{
